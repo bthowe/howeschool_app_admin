@@ -1,0 +1,14 @@
+node_modules
+
+*.pdf
+*.DS_Store
+*.pyc
+*.xml
+*.tex
+
+.idea/
+__pycache__/
+dump/
+
+
+

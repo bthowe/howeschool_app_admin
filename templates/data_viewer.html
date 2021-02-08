@@ -1,0 +1,273 @@
+{% extends "base_template.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block styles %}
+    {{super()}}
+{% endblock styles %}
+
+
+{% block body %}
+    {% block navbar %}
+        {{super()}}
+    {% endblock navbar %}
+    {% block content1 %}
+        {{super()}}
+    {% endblock content1 %}
+    {% block main %}
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="main">
+            <div class="row" id="dropDownRow">
+                <div class="col-3">
+                    <label for="choose_dbs">Database</label>
+                    <select id="choose_dbs" class="form-control" onchange=collectionAutoFill()>
+                        <option selected>Choose...</option>
+                        <option>Forms</option>
+                        <option>Math Daily</option>
+                        <option>Math Origins</option>
+                        <option>Scripture Commentary</option>
+                        <option>Users</option>
+                        <option>Math Aggregate</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row" id="buttonRow"></div>
+            <div class="row" id="tableRow"></div>
+        </div>
+
+    {% endblock main %}
+    {% block content2 %}
+        {{ super() }}
+    {% endblock content2 %}
+    {% block scripts %}
+        {{ super() }}
+        <script>
+            document.getElementById('choose_dbs').focus();
+
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+
+
+            function clearDivs(submitBool) {
+                if (!submitBool)
+                {
+                    if (document.getElementById('submit')) {
+                        document.getElementById('submit').remove();
+                        document.getElementById('dropDownDiv').remove();
+                        document.getElementById('textFieldDiv').remove();
+                        document.getElementById('buttonDiv').remove();
+                    }
+                }
+                if (document.getElementById('table_div')) {
+                    document.getElementById('table_div').remove();
+                }
+            }
+
+            function collectionAutoFill() {
+                clearDivs(false);
+                var dbs_e = document.getElementById("choose_dbs");
+                if (dbs_e.value != "0") {
+                    dbs = dbs_e.options[dbs_e.selectedIndex].text;
+
+                    if (dbs == "Forms"){
+                        dropDownCreate(["Scriptures", "Weekly"]);
+                        document.getElementById('choose_collection').focus();
+                        textFieldCreate();
+                        buttonCreate();
+                    }
+                    else if (dbs == "Math Daily"){
+                        dropDownCreate(["All", "Math_6_5", "Math_7_6", "Math_8_7", "Algebra_1_2", "Algebra_1", "Algebra_2", "Advanced_math"]);
+                        document.getElementById('choose_collection').focus();
+                        textFieldCreate();
+                        buttonCreate();
+                    }
+                    else if (dbs == "Math Origins"){
+                        dropDownCreate(["All", "Math_6_5", "Math_7_6", "Math_8_7", "Algebra_1_2", "Algebra_1", "Algebra_2", "Advanced_math"]);
+                        document.getElementById('choose_collection').focus();
+                        textFieldCreate();
+                        document.getElementById('date_input').style.visibility = 'hidden';
+                        document.getElementById('date_label').style.visibility = 'hidden';
+                        buttonCreate();
+                    }
+                    else if (dbs == "Scripture Commentary"){
+                        dropDownCreate(["All", "Calvin", "Samuel", "Kay"]);
+                        document.getElementById('choose_collection').focus();
+                        textFieldCreate();
+                        buttonCreate();
+                    }
+                    else if (dbs == "Users") {
+                        dropDownCreate(["users"]);
+                        document.getElementById('choose_collection').style.visibility = 'hidden';
+                        document.getElementById('collection_label').style.visibility = 'hidden';
+                        textFieldCreate();
+                        document.getElementById('date_input').style.visibility = 'hidden';
+                        document.getElementById('date_label').style.visibility = 'hidden';
+                        buttonCreate();
+                        document.getElementById('submit').focus()
+                    }
+                    else if (dbs == "Math Aggregate"){
+                        dropDownCreate(["All", "Calvin", "Samuel", "Kay"]);
+                        document.getElementById('choose_collection').focus();
+                        textFieldCreate();
+                        buttonCreate();
+                    };
+                }
+            }
+
+            function dropDownCreate(collections) {
+                var dropdown = document.createElement('select');
+                dropdown.id = 'choose_collection';
+                dropdown.className = 'form-control';
+
+                var label = document.createElement('Label');
+                label.id = 'collection_label';
+                label.setAttribute("for", 'choose_collection');
+                label.innerHTML = 'Collections';
+
+                for (var i = 0; i < collections.length; i++) {
+                    var option = document.createElement('option')
+                    option.text = collections[i]
+                    dropdown.appendChild(option)
+                }
+
+                var dropdownrow = document.getElementById('dropDownRow');
+                var dropdowndiv = document.createElement('div');
+                dropdowndiv.id = 'dropDownDiv';
+                dropdowndiv.className = 'col-2';
+
+                dropdowndiv.appendChild(label);
+                dropdowndiv.appendChild(dropdown);
+                dropdownrow.appendChild(dropdowndiv);
+            }
+
+            function textFieldCreate() {
+                var input = document.createElement('input');
+                input.id = 'date_input';
+                input.className = 'form-control';
+                input.value = yyyy + '-' + mm + '-' + dd;
+
+                var label = document.createElement('Label');
+                label.id = 'date_label';
+                label.setAttribute("for", 'date_input');
+                label.innerHTML = 'Date (leave blank for all rows)';
+
+                var dropdownrow = document.getElementById('dropDownRow');
+                var dropdowndiv = document.createElement('div');
+                dropdowndiv.id = 'textFieldDiv';
+                dropdowndiv.className = 'col-3';
+
+                dropdowndiv.appendChild(label);
+                dropdowndiv.appendChild(input);
+                dropdownrow.appendChild(dropdowndiv);
+            }
+
+            function buttonCreate() {
+                var button = document.createElement('button');
+                button.id = 'submit';
+                button.className = 'btn btn-primary';
+                button.innerHTML = 'Submit';
+                button.onclick = function() {
+                    var dbs_e = document.getElementById("choose_dbs");
+                    var col_e = document.getElementById("choose_collection");
+
+                    var request = new XMLHttpRequest();
+                    request.responseType = 'json';
+                    request.open("POST", "/query_dbs", true);
+                    request.onload = function () {
+                        clearDivs(true);
+                        var dbs_details = JSON.parse(JSON.stringify(request.response))['items'];
+                        tableCreate(dbs_details);
+                        document.getElementById('choose_dbs').focus();
+                    };
+                    request.send(JSON.stringify(
+                        {
+                            "dbs": dbs_e.options[dbs_e.selectedIndex].text,
+                            "collection": col_e.options[col_e.selectedIndex].text,
+                            "date": date_input.value
+                        }
+                        )
+                    );
+
+                };
+
+                var buttonrow = document.getElementById('buttonRow');
+                var buttondiv = document.createElement('div');
+                buttondiv.id = 'buttonDiv';
+                buttondiv.className = 'col pt-4 pb-4';
+
+                buttondiv.appendChild(button);
+                buttonrow.appendChild(buttondiv);
+            }
+
+            function tableCreate(dbs_details) {
+                var table_div = document.createElement('div');
+                table_div.id = 'table_div';
+                table_div.className = 'col table-responsive';
+
+                var table = document.createElement('table');
+                table.className = "table table-striped table-bordered";
+                var thead = document.createElement('thead');
+                thead.className = "thead-dark";
+
+                var tr = document.createElement('tr');
+                tr.className = "d-flex";
+
+                var th = document.createElement('th');
+                th.scope = 'col';
+                th.innerText = "#";
+                th.setAttribute("style", "width:50px;");
+                tr.appendChild(th);
+
+                for (var k in dbs_details[0]) {
+                    var th = document.createElement('th');
+                    th.scope = 'col';
+                    th.innerText = k;
+                    th.setAttribute("style", "width:305px;");
+                    tr.appendChild(th);
+                }
+                thead.appendChild(tr);
+                table.appendChild(thead);
+
+                var tbody = document.createElement('tbody');
+                for (var i = 0; i < dbs_details.length; i++) {
+                    tr = document.createElement('tr');
+                    tr.className = "d-flex";
+                    var th = document.createElement('th');
+                    th.scope = 'row';
+                    th.innerHTML = i + 1;
+                    th.setAttribute("style", "width:50px;");
+                    tr.appendChild(th);
+
+                    for (var k in dbs_details[i]) {
+                        var td = document.createElement('td');
+{#                        td.className = "col-4";#}
+                        td.setAttribute("style", "width:305px;");
+
+                        td_div = document.createElement('div');
+                        td_div.setAttribute("style", "word-break:break-all;");
+                        td_div.innerHTML = dbs_details[i][k];
+
+                        td.appendChild(td_div);
+                        tr.appendChild(td);
+                    }
+                    tbody.appendChild(tr);
+                }
+
+                table.appendChild(tbody);
+                table_div.appendChild(table);
+                document.getElementById('tableRow').appendChild(table_div)
+            }
+        </script>
+
+    {% endblock scripts %}
+
+{% endblock body %}
