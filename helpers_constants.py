@@ -1,3 +1,10 @@
+import os
+
+
+def filenamer(path):
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(ROOT_DIR, path)
+
 ACCESS = {
     'guest': 0,
     'user': 1,
