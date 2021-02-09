@@ -156,7 +156,7 @@ def weekly_forms_create():
 def download_forms():
     form = helpers_classes.DownloadFormsForm()
 
-    path_week_static = '/Users/thowe/Projects/howeschool_app2/static/weekly_time_sheet.pdf'
+    path_week_static = '/Users/thowe/Projects/howeschool_app_admin/static/weekly_time_sheet.pdf'
 
     if request.method == 'POST':  # and form.validate_on_submit():
         helpers_functions.weekly_forms_email()
