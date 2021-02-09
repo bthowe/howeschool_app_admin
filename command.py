@@ -148,7 +148,7 @@ def weekly_forms_create():
 def download_forms():
     for file in ['weekly_time_sheet.pdf', 'weekly_jobs_sheet.pdf']:
         if os.path.exists(helpers_constants.filenamer(file)):
-            os.rename(helpers_constants.filenamer(file), helpers_constants.filenamer('static' + file))
+            os.rename(helpers_constants.filenamer(file), helpers_constants.filenamer('static/' + file))
 
     time_stamp = str(datetime.datetime.fromtimestamp(os.path.getmtime(helpers_constants.filenamer('static/weekly_time_sheet.pdf'))).strftime('%Y-%m-%d %H:%M:%S'))
     return render_template(
