@@ -12,10 +12,11 @@
         
 
 TODO:
-1. add book registration page
-    1. 
 1. work on finessing old pages
     1. start with scripture commentary
+        1. autofill in the field
+        2. autofill fields after tabbing over, like the book field
+        3. autofill the chapter field and use arrows to increase or decrease
 
 
 

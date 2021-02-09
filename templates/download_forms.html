@@ -27,29 +27,15 @@
                         </thead>
                         <tbody>
                             <tr class="d-flex">
-                                <td class="col-3"><a href="/static/weekly_time_sheet.pdf" download>weekly_time_sheet.pdf</a></td>
+                                <td class="col-3"><a href="/static/weekly_time_sheet.pdf" download>time_sheets.pdf</a></td>
                                 <td class="col-3">{{ weekly_forms_pdf }} </td>
                             </tr>
-<!--                        <tr class="d-flex">-->
-<!--                            <td class="col-3"><a href="/static/scripture_table.pdf" download>scripture_table.pdf</a></td>-->
-<!--                            <td class="col-3">{{ scripture_list_pdf }} </td>-->
-<!--                        </tr>-->
-<!--                        <tr class="d-flex">-->
-<!--                            <td class="col-3"><a href="/static/goals_table.pdf" download>goals_table.pdf</a></td>-->
-<!--                            <td class="col-3">{{ goals_list_pdf }} </td>-->
-<!--                        </tr>-->
+                            <tr class="d-flex">
+                                <td class="col-3"><a href="/static/weekly_jobs_sheet.pdf" download>jobs.pdf</a></td>
+                                <td class="col-3">{{ weekly_forms_pdf }} </td>
+                            </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="row">
-                    <form method="POST" action="download_forms">
-                        <div class="form-row">
-                            <div class="col-md-auto">
-                                <input class="btn btn-primary" id="submit" type="submit" value="Email Files"/>
-                            </div>
-                        </div>
-
-                    </form>
                 </div>
             </div>
         </div>
@@ -61,9 +47,9 @@
     {% block scripts %}
         {{ super() }}
 
-        <script>
-            document.getElementById('choose_year').focus();
-        </script>
+<!--        <script>-->
+<!--&lt;!&ndash;            document.getElementById('choose_year').focus();&ndash;&gt;-->
+<!--        </script>-->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
                 integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
                 crossorigin="anonymous"></script>

@@ -29,18 +29,6 @@
                                 <h1>Scripture</h1>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col pb-3">
-                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                    <label class="btn btn-secondary active">
-                                        <input type="radio" id="new_script" checked onchange=scriptEnter('new')> New
-                                    </label>
-                                    <label class="btn btn-secondary">
-                                        <input type="radio" id="review_script" onchange=scriptEnter('review')> Review
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
                         <div class="row" id="script_enter">
                             <div class="col">
                                 <table class="table table-sm">
@@ -218,6 +206,9 @@
 
             document.getElementById('scripture_ref').value = formData['scripture_ref'];
             document.getElementById('scripture').value = formData['scripture'];
+
+            document.getElementById('discussion_ref').value = formData['discussion_ref'];
+            document.getElementById('discussion_question').value = formData['discussion_question'];
 
             for (i = 0; i < day_lst.length; ++i) {
                 document.getElementById(day_lst[i] + '_job').value = formData[day_lst[i] + '_job'];

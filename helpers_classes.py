@@ -35,21 +35,9 @@ class WeeklyForm(FlaskForm):
     fri_job = StringField('Friday', validators=[InputRequired()], id='fri_job')
     sat_job = StringField('Saturday', validators=[InputRequired()], id='sat_job')
     cal_goal1 = StringField('Calvin', validators=[InputRequired()], id='calvin_goal1')
-    # cal_goal2 = StringField('Physical', validators=[InputRequired()], id='calvin_goal2')
-    # cal_goal3 = StringField('Social', validators=[InputRequired()], id='calvin_goal3')
-    # cal_goal4 = StringField('Intellectual', validators=[InputRequired()], id='calvin_goal4')
     sam_goal1 = StringField('Samuel', validators=[InputRequired()], id='samuel_goal1')
-    # sam_goal2 = StringField('Physical', validators=[InputRequired()], id='samuel_goal2')
-    # sam_goal3 = StringField('Social', validators=[InputRequired()], id='samuel_goal3')
-    # sam_goal4 = StringField('Intellectual', validators=[InputRequired()], id='samuel_goal4')
     kay_goal1 = StringField('Kay', validators=[InputRequired()], id='kay_goal1')
-    # kay_goal2 = StringField('Physical', validators=[InputRequired()], id='kay_goal2')
-    # kay_goal3 = StringField('Social', validators=[InputRequired()], id='kay_goal3')
-    # kay_goal4 = StringField('Intellectual', validators=[InputRequired()], id='kay_goal4')
     seth_goal1 = StringField('Seth', validators=[InputRequired()], id='seth_goal1')
-    # seth_goal2 = StringField('Physical', validators=[InputRequired()], id='seth_goal2')
-    # seth_goal3 = StringField('Social', validators=[InputRequired()], id='seth_goal3')
-    # seth_goal4 = StringField('Intellectual', validators=[InputRequired()], id='seth_goal4')
     cal_book = StringField('Calvin', validators=[InputRequired()], id='calvin_book')
     sam_book = StringField('Samuel', validators=[InputRequired()], id='samuel_book')
     kay_book = StringField('Kay', validators=[InputRequired()], id='kay_book')
@@ -88,10 +76,6 @@ class CreditDebit(FlaskForm):
     credit_debit = SelectField('Transaction Type', choices=[('choose', 'Choose...'), ('deposit', 'Deposit'), ('withdrawal', 'Withdrawal')], validators=[InputRequired()], id='credit_debit')
     amount = FloatField('Amount', validators=[InputRequired()], id='amount')
     description = StringField('Description', validators=[InputRequired()], widget=TextArea(), id='description')
-
-class DownloadFormsForm(FlaskForm):
-    email = RadioField('Email List?', choices=[('yes', 'Yes'), ('no', 'No')], id='email', default='no')
-
 
 class User(UserMixin):
     def __init__(self, username, access=helpers_constants.ACCESS['user']):

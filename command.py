@@ -116,10 +116,11 @@ def weekly_forms_create():
     output = {k: v for k, v in list(db_forms.db.Weekly.find())[-1].items() if k != '_id'}
 
     form = helpers_classes.WeeklyForm()
-    if request.method == 'POST':  # and form.validate_on_submit():
+    if request.method == 'POST':
         data_weekly = helpers_functions.weekly_data_json(form)
         ret_weekly = db_forms.db['Weekly'].insert_one(data_weekly)
         print('Weekly data inserted: {}'.format(ret_weekly))
+
         helpers_functions.weekly_form_latex_create(
                 ['Calvin', 'Samuel', 'Kay', 'Seth'],
                 [form.cal_book.data, form.sam_book.data, form.kay_book.data, form.seth_book.data],
@@ -131,45 +132,27 @@ def weekly_forms_create():
                     'Samuel': [form.sam_goal1.data],
                     'Kay': [form.kay_goal1.data],
                     'Seth': [form.seth_goal1.data]
-                },
-                [form.mon_job.data, form.tue_job.data, form.wed_job.data, form.thu_job.data, form.fri_job.data, form.sat_job.data]
+                }
         )
+        helpers_functions.weekly_jobs_latex_create([form.mon_job.data, form.tue_job.data, form.wed_job.data, form.thu_job.data, form.fri_job.data, form.sat_job.data])
+
         data_scriptures = helpers_functions.scripture_list_json(form)
         ret_scriptures = db_forms.db['Scriptures'].insert_one(data_scriptures)
         print('Scriptures data inserted: {}'.format(ret_scriptures))
-        helpers_functions.scripture_table_create(pd.DataFrame(list(db_forms.db['Scriptures'].find())))
-        helpers_functions.goals_latex_create(
-            ['Calvin', 'Samuel', 'Kay', 'Seth'],
-            {
-                'Calvin': [form.cal_goal1.data],
-                'Samuel': [form.sam_goal1.data],
-                'Kay': [form.kay_goal1.data],
-                'Seth': [form.seth_goal1.data]
-            }
-        )
-
         return redirect(url_for('weekly_forms_create'))
     return render_template('weekly_forms_create.html', form=form, date=date, form_data=output, page_name='Weekly Forms')
 
-@app.route("/download_forms", methods=['POST', 'GET'])
+
+@app.route("/download_forms", methods=['GET'])
 @login_required
 def download_forms():
-    form = helpers_classes.DownloadFormsForm()
-
     path_week_static = helpers_constants.filenamer('static/weekly_time_sheet.pdf')
-    # path_week_static = '/home/pi/PythonProjects/howeschool_app_admin/static/weekly_time_sheet.pdf'
-    # path_week_static = '/Users/thowe/Projects/howeschool_app_admin/static/weekly_time_sheet.pdf'
-
-    if request.method == 'POST':  # and form.validate_on_submit():
-        helpers_functions.weekly_forms_email()
-        return redirect(url_for('download_forms'))
-    # todo: flash message that the email has been sent.
     return render_template(
         'download_forms.html',
-        form=form,
         page_name='Download Forms',
-        weekly_forms_pdf=str(datetime.datetime.fromtimestamp(os.path.getmtime(path_week_static))),
+        weekly_forms_pdf=str(datetime.datetime.fromtimestamp(os.path.getmtime(path_week_static)).strftime('%Y-%m-%d %H:%M:%S')),
     )
+
 
 @app.route("/banking_manage", methods=['POST', 'GET'])
 @login_required

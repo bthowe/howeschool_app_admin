@@ -104,19 +104,6 @@ def new_book_information(form):
     return data
 
 
-
-def weekly_forms_email():
-    yag = yagmail.SMTP('b.travis.howe@gmail.com', os.environ['GMAIL'])
-    yag.send(
-        ["b.travis.howe@gmail.com", "kassie.howe@gmail.com"],
-        subject="Forms for the Week",
-        contents="",
-        attachments=[
-            '/home/pi/PythonProjects/howeschool_app/static/weekly_time_sheet.pdf',
-            '/home/pi/PythonProjects/howeschool_app/static/scripture_table.pdf',
-        ]
-    )
-
 def _time_sheets(dates, goals, name, scrip):
     return '''
     \\begin{{sidewaystable}}
@@ -200,7 +187,7 @@ def _time_sheet(dates, discussion_question, name, scrip, goals):
     )
 
 
-def weekly_form_latex_create(kids, books, dates, scripture, discussion_question, goals, jobs):
+def weekly_form_latex_create(kids, books, dates, scripture, discussion_question, goals):
     header = r'''
     \documentclass[10pt,twoside,letterpaper,oldfontcommands,openany]{memoir}
     \usepackage{rotating, caption}
@@ -221,6 +208,26 @@ def weekly_form_latex_create(kids, books, dates, scripture, discussion_question,
         \\setlength{{\@fptop}}{{35pt}}
         \\makeatother
         \\begin{{table}}
+        \\caption*{{Scripture Questions and Principles}}
+        \\begin{{tabular}}{{| l | l | l | l | l | l |}}
+        \\hline
+        \\multicolumn{{3}}{{|p{{9.5cm}}|}}{{Name: {0}}} & \\multicolumn{{3}}{{|p{{9.5cm}}|}}{{Date: {2}}} \\\\[20pt]
+        \\hline
+        \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Book: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Chapter: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Verse: }} \\\\[20pt]
+        \\hline
+        \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Book: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Chapter: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Verse: }} \\\\[20pt]
+        \\hline
+        \\multicolumn{{6}}{{l}}{{}} \\\\[20pt]
+        \\multicolumn{{6}}{{l}}{{Comment:}} \\\\[20pt]
+        \\end{{tabular}}
+        \\end{{table}}
+        
+        \\vspace{{5 cm}}
+
+        \\makeatletter
+        \\setlength{{\@fptop}}{{35pt}}
+        \\makeatother
+        \\begin{{table}}
         \\caption*{{Math Assignment}}
         \\begin{{tabular}}{{| l | l | l | l | l | l |}}
         \\hline
@@ -234,26 +241,6 @@ def weekly_form_latex_create(kids, books, dates, scripture, discussion_question,
         \\hline
         \\multicolumn{{6}}{{|l|}}{{Problems Missed: }} \\\\[20pt]
         \\hline
-        \\end{{tabular}}
-        \\end{{table}}
-
-        \\clearpage
-        \\newpage
-        \\makeatletter
-        \\setlength{{\@fptop}}{{35pt}}
-        \\makeatother
-        \\begin{{table}}
-        \\caption*{{Scripture Questions and Principles}}
-        \\begin{{tabular}}{{| l | l | l | l | l | l |}}
-        \\hline
-        \\multicolumn{{3}}{{|p{{9.5cm}}|}}{{Name: {0}}} & \\multicolumn{{3}}{{|p{{9.5cm}}|}}{{Date: {2}}} \\\\[20pt]
-        \\hline
-        \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Book: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Chapter: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Verse: }} \\\\[20pt]
-        \\hline
-        \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Book: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Chapter: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Verse: }} \\\\[20pt]
-        \\hline
-        \\multicolumn{{6}}{{l}}{{}} \\\\[20pt]
-        \\multicolumn{{6}}{{l}}{{Comment:}} \\\\[20pt]
         \\end{{tabular}}
         \\end{{table}}
         '''.format(
@@ -283,18 +270,33 @@ def weekly_form_latex_create(kids, books, dates, scripture, discussion_question,
             \\end{{table}}
             '''.format(i[0][0], sunday_date)
 
-    if scripture[1] == 'Review Time!':
-        scrip = 'Review Time!'
-    else:
-        scrip = '``{0}" ({1})'.format(scripture[1], scripture[0])  # 13
-
+    scrip = '``{0}" ({1})'.format(scripture[1], scripture[0])  # 13
     time_sheets = ''''''
     for name in kids:
         time_sheets += _time_sheet(dates, discussion_question, name, scrip, goals[name])
 
+    content = header + time_sheets + math_scripture + footer
+    print(content)
+
+    with open('weekly_time_sheet.tex', 'w') as f:
+         f.write(content)
+
+    subprocess.Popen(['sudo', '/usr/local/bin/laton', 'weekly_time_sheet.tex'])
+
+
+def weekly_jobs_latex_create(jobs):
+    header = r'''
+    \documentclass[10pt,twoside,letterpaper,oldfontcommands,openany]{memoir}
+    \usepackage{rotating, caption}
+    \usepackage[margin=0.25in]{geometry}
+    \newcommand{\tabitem}{~~\llap{\textbullet}~~}
+    \pagenumbering{gobble}
+    \begin{document}
+    '''
+
+    footer = r'''\end{document}'''
+
     jobs = '''
-    \\clearpage
-    \\newpage
     \\makeatletter
     \\setlength{{\@fptop}}{{5pt}}
     \\makeatother
@@ -315,14 +317,13 @@ def weekly_form_latex_create(kids, books, dates, scripture, discussion_question,
     \\end{{sidewaystable}}
     '''.format(jobs[0], jobs[1], jobs[2], jobs[3], jobs[4], jobs[5], '5 minute pickup')
 
-
-    content = header + jobs + time_sheets + math_scripture + footer
+    content = header + jobs + footer
     print(content)
 
-    with open('weekly_time_sheet.tex', 'w') as f:
+    with open('weekly_jobs_sheet.tex', 'w') as f:
          f.write(content)
 
-    subprocess.Popen(['sudo', '/usr/local/bin/laton', 'weekly_time_sheet.tex'])
+    subprocess.Popen(['sudo', '/usr/local/bin/laton', 'weekly_jobs_sheet.tex'])
 
 
 def goals_latex_create(kids, goals):
