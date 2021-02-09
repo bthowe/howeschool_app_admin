@@ -146,11 +146,15 @@ def weekly_forms_create():
 @app.route("/download_forms", methods=['GET'])
 @login_required
 def download_forms():
-    path_week_static = helpers_constants.filenamer('static/weekly_time_sheet.pdf')
+    for file in ['weekly_time_sheet.pdf', 'weekly_jobs_sheet.pdf']:
+        if os.path.exists(helpers_constants.filenamer(file)):
+            os.rename(helpers_constants.filenamer(file), helpers_constants.filenamer(f'static/{file}'))
+
+    time_stamp = str(datetime.datetime.fromtimestamp(os.path.getmtime(helpers_constants.filenamer(f'static/weekly_time_sheet.pdf'))).strftime('%Y-%m-%d %H:%M:%S'))
     return render_template(
         'download_forms.html',
         page_name='Download Forms',
-        weekly_forms_pdf=str(datetime.datetime.fromtimestamp(os.path.getmtime(path_week_static)).strftime('%Y-%m-%d %H:%M:%S')),
+        weekly_forms_pdf=time_stamp,
     )
 
 

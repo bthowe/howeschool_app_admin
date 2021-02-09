@@ -17,7 +17,8 @@ TODO:
         1. autofill in the field
         2. autofill fields after tabbing over, like the book field
         3. autofill the chapter field and use arrows to increase or decrease
-
+2. there should be weekly_bank_deposit.py form
+    1. make one for Seth
 
 
 
