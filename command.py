@@ -217,13 +217,15 @@ def query_bank():
 @login_required
 def enter_book_information():
     form = helpers_classes.NewBookInformation()
-    df_books = pd.DataFrame(db_books.db['Books'].find())[['author', 'title']]
 
-    authors_list = df_books['author'].unique().tolist()
-    titles_list = df_books['title'].unique().tolist()
+    books_lst = list(db_books.db['Books'].find())
+    if not books_lst:
+        df_books = pd.DataFrame(columns=['author', 'title'])
+    else:
+        df_books = pd.DataFrame(books_lst)[['author', 'title']]
 
     if request.method == 'POST':
-        if (form.title.data.title() in titles_list) and (form.author.data.title() in authors_list):
+        if (form.title.data.title() in df_books['title'].unique().tolist()) and (form.author.data.title() in df_books['author'].unique().tolist()):
             flash('That book already exists!')
         else:
             data = helpers_functions.new_book_information(form)
