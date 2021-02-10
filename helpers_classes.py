@@ -69,7 +69,7 @@ class ScriptureDailyForm(FlaskForm):
 
 class NewBookInformation(FlaskForm):
     title = StringField('Title', validators=[InputRequired()], id='title')  #, render_kw={'placeholder': 'Title'})
-    author = StringField('Author', validators=[InputRequired()], id='author', render_kw={'placeholder': 'Last, First'})
+    author = StringField('Author', id='author', render_kw={'placeholder': 'Last, First'})
     # title = StringField('Title', validators=[InputRequired()], widget=TextArea(), id='title')
     # author = StringField('Author', validators=[InputRequired()], widget=TextArea(), id='author', render_kw={'placeholder': 'Last, First'})
 
