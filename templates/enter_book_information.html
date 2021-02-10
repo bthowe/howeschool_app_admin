@@ -71,12 +71,15 @@
             <form method="POST" action="enter_book_information">
                 <div class="row">
                     <div class="form-group col-md-12">
-                        {{ wtf.form_field(form.author, cols="42", rows="1") }}
+                        {{ form.author.label }}
+                        {{ form.author(class_="col-12") }}
+<!--                        {{ wtf.form_field(form.author, cols="42", rows="1") }}-->
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-12">
-                        {{ wtf.form_field(form.title, cols="42", rows="1") }}
+                        {{ form.title.label }}
+                        {{ form.title(class_="col-12") }}
                     </div>
                 </div>
                 <div class="form-row">

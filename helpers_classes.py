@@ -68,8 +68,10 @@ class ScriptureDailyForm(FlaskForm):
     comment = StringField('Comment', validators=[InputRequired()], widget=TextArea(), id='comment')
 
 class NewBookInformation(FlaskForm):
-    title = StringField('Title', validators=[InputRequired()], widget=TextArea(), id='title')
-    author = StringField('Author', validators=[InputRequired()], widget=TextArea(), id='author', render_kw={'placeholder': 'Last, First'})
+    title = StringField('Title', validators=[InputRequired()], id='title')  #, render_kw={'placeholder': 'Title'})
+    author = StringField('Author', validators=[InputRequired()], id='author', render_kw={'placeholder': 'Last, First'})
+    # title = StringField('Title', validators=[InputRequired()], widget=TextArea(), id='title')
+    # author = StringField('Author', validators=[InputRequired()], widget=TextArea(), id='author', render_kw={'placeholder': 'Last, First'})
 
 class CreditDebit(FlaskForm):
     choose_kid = SelectField('Name', choices=[('choose', 'Choose...'), ('Calvin', 'Calvin'), ('Samuel', 'Samuel'), ('Kay', 'Kay')], validators=[InputRequired()], id='choose_kid')
