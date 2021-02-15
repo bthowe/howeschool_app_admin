@@ -9,6 +9,11 @@
     6. (new) books database
         1. view database
         2. manipulate database
+
+
+banking: add seth, chron job, new file
+books: get csv file of books
+        
         
 
 TODO:
