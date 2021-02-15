@@ -141,78 +141,13 @@
                 document.getElementById('date').focus()
             }
 
-
-            var books = ['1 Nephi', '2 Nephi', 'Jacob', 'Enos', 'Jarom', 'Omni', 'Words of Mormon', 'Mosiah', 'Alma', 'Helaman', '3 Nephi', '4 Nephi', 'Mormon', 'Ether', 'Moroni']
-
-            function autocomplete(inp, arr) {
-                var currentFocus;
-                inp.addEventListener("input", function(e) {
-                    var a, b, i, val = this.value;
-                    closeAllLists();
-                    if (!val) { return false;}
-                    currentFocus = -1;
-                    a = document.createElement("DIV");
-                    a.setAttribute("id", this.id + "autocomplete-list");
-                    a.setAttribute("class", "autocomplete-items");
-                    this.parentNode.appendChild(a);
-                    for (i = 0; i < arr.length; i++) {
-                        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-                            b = document.createElement("DIV");
-                            b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                            b.innerHTML += arr[i].substr(val.length);
-                            b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-                                b.addEventListener("click", function(e) {
-                                inp.value = this.getElementsByTagName("input")[0].value;
-                                closeAllLists();
-                            });
-                            a.appendChild(b);
-                        }
-                    }
-                });
-                inp.addEventListener("keydown", function(e) {
-                    var x = document.getElementById(this.id + "autocomplete-list");
-                    if (x) x = x.getElementsByTagName("div");
-                    if (e.keyCode == 40) {
-                        currentFocus++;
-                        addActive(x);
-                    } else if (e.keyCode == 38) { //up
-                        currentFocus--;
-                        addActive(x);
-                    } else if (e.keyCode == 13) {
-                        e.preventDefault();
-                        if (currentFocus > -1) {
-                            if (x) x[currentFocus].click();
-                        }
-                    }
-                });
-                function addActive(x) {
-                    if (!x) return false;
-                    removeActive(x);
-                    if (currentFocus >= x.length) currentFocus = 0;
-                    if (currentFocus < 0) currentFocus = (x.length - 1);
-                    x[currentFocus].classList.add("autocomplete-active");
-                }
-                function removeActive(x) {
-                    for (var i = 0; i < x.length; i++) {
-                        x[i].classList.remove("autocomplete-active");
-                    }
-                }
-                function closeAllLists(elmnt) {
-                    var x = document.getElementsByClassName("autocomplete-items");
-                    for (var i = 0; i < x.length; i++) {
-                        if (elmnt != x[i] && elmnt != inp) {
-                        x[i].parentNode.removeChild(x[i]);
-                    }
-                }
-            }
-            document.addEventListener("click", function (e) {
-                closeAllLists(e.target);
-            });
+            function update_end_book() {
+                document.getElementById('end_book').value = document.getElementById('start_book').value
             }
 
-            autocomplete(document.getElementById("start_book"), books);
-            autocomplete(document.getElementById("end_book"), books);
-
+            function update_end_chapter() {
+                document.getElementById('end_chapter').value = parseInt(document.getElementById('start_chapter').value) + 1
+            }
 
         </script>
     {% endblock scripts %}

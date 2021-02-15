@@ -202,37 +202,5 @@ def query_bank():
     return jsonify(output)
 
 
-@app.route("/enter_book_information", methods=['POST', 'GET'])
-@login_required
-def enter_book_information():
-    form = helpers_classes.NewBookInformation()
-
-    books_lst = list(db_books.db['Books'].find())
-    if not books_lst:
-        df_books = pd.DataFrame(columns=['author', 'title'])
-    else:
-        df_books = pd.DataFrame(books_lst)[['author', 'title']]
-
-    if request.method == 'POST':
-        if (form.title.data.title() in df_books['title'].unique().tolist()) and (form.author.data.title() in df_books['author'].unique().tolist()):
-            flash('That book already exists!')
-        else:
-            data = helpers_functions.new_book_information(form)
-            ret = db_books.db['Books'].insert_one(data)
-            print('data inserted: {}'.format(ret))
-        return redirect(url_for('enter_book_information'))
-    return render_template(
-        'enter_book_information.html',
-        form=form,
-        books=df_books.to_dict('records'),
-        authors=df_books['author'].unique().tolist(),
-        titles=df_books['title'].unique().tolist(),
-        page_name='New Book Information'
-    )
-
-
-
-
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8001, debug=True)
