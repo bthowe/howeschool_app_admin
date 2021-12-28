@@ -111,7 +111,7 @@ def scripture_commentary():
 @login_required
 def weekly_forms_create():
     today = datetime.date.today()
-    date_shift = 7 - today.weekday()  # Monday is 0
+    date_shift = 6 - today.weekday()  # Monday is 0
     date = str(today + datetime.timedelta(date_shift))
     output = {k: v for k, v in list(db_forms.db.Weekly.find())[-1].items() if k != '_id'}
 
@@ -121,20 +121,46 @@ def weekly_forms_create():
         ret_weekly = db_forms.db['Weekly'].insert_one(data_weekly)
         print('Weekly data inserted: {}'.format(ret_weekly))
 
-        helpers_functions.weekly_form_latex_create(
-                ['Calvin', 'Samuel', 'Kay', 'Seth'],
-                [form.cal_book.data, form.sam_book.data, form.kay_book.data, form.seth_book.data],
-                [str(form.weekof.data + datetime.timedelta(days)) for days in range(0, 6)],
-                [form.scripture_ref.data, form.scripture.data],
-                [form.discussion_ref.data, form.discussion_question.data],
-                {
-                    'Calvin': [form.cal_goal1.data],
-                    'Samuel': [form.sam_goal1.data],
-                    'Kay': [form.kay_goal1.data],
-                    'Seth': [form.seth_goal1.data]
-                }
+        scripture_dict = {
+            'assignment': form.scripture_ass.data,
+            'reference': form.scripture_ref.data,
+            'scripture': form.scripture.data
+        }
+        kids_dict = {
+            'Calvin': {
+                'book': form.cal_book.data,
+                'goal': form.cal_goal.data,
+                'jobs': ['vacuum stairs #1', 'vacuum stairs #2', "vacuum parent's\nroom, closet, and\nhallway", 'vacuum stairs #1', 'vacuum stairs #2', "vacuum parent's\nroom, closet, and\nhallway"]
+            },
+            'Samuel': {
+                'book': form.sam_book.data,
+                'goal': form.sam_goal.data,
+                'jobs': ['toilet', 'garbage, mirror,\npaper towels,\nlight switches\ndoor knobs', 'sink, handsoap\nhand towel', 'vacuum room', 'fold laundry', 'other bathrooms']
+            },
+            'Kay': {
+                'book': form.kay_book.data,
+                'goal': form.kay_goal.data,
+                'jobs': ['toilet', 'garbage, mirror,\npaper towels,\nlight switches\ndoor knobs', 'sink, handsoap\nhand towel', 'vacuum room', 'fold laundry', 'other bathrooms']
+            },
+            'Seth': {
+                'book': form.seth_book.data,
+                'goal': form.seth_goal.data,
+                'jobs': ['toilet', 'garbage, mirror,\npaper towels,\nlight switches\ndoor knobs', 'sink, handsoap\nhand towel', 'vacuum room', 'fold laundry', 'other bathrooms']
+            }
+        }
+
+        helpers_functions.weekly_form_pdf_create(
+            [str(form.weekof.data + datetime.timedelta(days)) for days in range(0, 7)],
+            scripture_dict,
+            kids_dict
         )
-        helpers_functions.weekly_jobs_latex_create([form.mon_job.data, form.tue_job.data, form.wed_job.data, form.thu_job.data, form.fri_job.data, form.sat_job.data])
+        # helpers_functions.weekly_jobs_latex_create([form.mon_job.data, form.tue_job.data, form.wed_job.data, form.thu_job.data, form.fri_job.data, form.sat_job.data])
+
+        # todo: jobs and scripture list and goals sheets
+        # todo: make an interface that is like the time sheet and that can be manipulated
+        # todo: dockerize everything.
+
+
 
         data_scriptures = helpers_functions.scripture_list_json(form)
         ret_scriptures = db_forms.db['Scriptures'].insert_one(data_scriptures)

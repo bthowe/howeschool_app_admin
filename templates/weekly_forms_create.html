@@ -35,16 +35,20 @@
                                     <thead class="thead-light">
                                     <tr class="d-flex">
                                         <th class="col-2"></th>
-                                        <th class="col-5"></th>
+                                        <th class="col-8"></th>
                                     </thead>
                                     <tbody>
                                     <tr class="d-flex">
+                                        <th class="col-2">Reading Ass.</th>
+                                        <td class="col-8">{{ form.scripture_ass(class_="col-12") }}</td>
+                                    </tr>
+                                    <tr class="d-flex">
                                         <th class="col-2">Reference</th>
-                                        <td class="col-5">{{ form.scripture_ref(class_="col-12") }}</td>
+                                        <td class="col-8">{{ form.scripture_ref(class_="col-12") }}</td>
                                     </tr>
                                     <tr class="d-flex">
                                         <th class="col-2">Text</th>
-                                        <td class="col-5">{{ form.scripture(cols="46", rows="10") }}</td>
+                                        <td class="col-8">{{ form.scripture(cols="72", rows="10") }}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -54,101 +58,31 @@
                 </div>
 
 
-                <div class="form-row">
-                    <div class="col-12">
-                        <div class="row">
-                            <div class="col">
-                                <h1>Discussion Question for the Week</h1>
-                            </div>
-                        </div>
-                        <div class="row" id="discussion_question_enter">
-                            <div class="col">
-                                <table class="table table-sm">
-                                    <thead class="thead-light">
-                                    <tr class="d-flex">
-                                        <th class="col-2"></th>
-                                        <th class="col-5"></th>
-                                    </thead>
-                                    <tbody>
-                                    <tr class="d-flex">
-                                        <th class="col-2">Reference</th>
-                                        <td class="col-5">{{ form.discussion_ref(class_="col-12") }}</td>
-                                    </tr>
-                                    <tr class="d-flex">
-                                        <th class="col-2">Question</th>
-                                        <td class="col-5">{{ form.discussion_question(cols="46", rows="10") }}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div class="form-row">
-                    <h1>Jobs</h1>
-                    <table class="table table-sm">
-                        <thead class="thead-light">
-                        <tr class="d-flex">
-                            <th class="col-2">Day of Week</th>
-                            <th class="col-5">Job</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="d-flex">
-                            <th class="col-2">{{ form.mon_job.label }}</th>
-                            <td class="col-5">{{ form.mon_job(class_="col-12") }}</td>
-                        </tr>
-                        <tr class="d-flex">
-                            <th class="col-2">{{ form.tue_job.label }}</th>
-                            <td class="col-5">{{ form.tue_job(class_="col-12") }}</td>
-                        </tr>
-                        <tr class="d-flex">
-                            <th class="col-2">{{ form.wed_job.label }}</th>
-                            <td class="col-5">{{ form.wed_job(class_="col-12") }}</td>
-                        </tr>
-                        <tr class="d-flex">
-                            <th class="col-2">{{ form.thu_job.label }}</th>
-                            <td class="col-5">{{ form.thu_job(class_="col-12") }}</td>
-                        </tr>
-                        <tr class="d-flex">
-                            <th class="col-2">{{ form.fri_job.label }}</th>
-                            <td class="col-5">{{ form.fri_job(class_="col-12") }}</td>
-                        </tr>
-                        <tr class="d-flex">
-                            <th class="col-2">{{ form.sat_job.label }}</th>
-                            <td class="col-5">{{ form.sat_job(class_="col-12") }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
                 <div class="form-row">
                     <h1>Goals</h1>
                     <table class="table table-sm">
                         <thead class="thead-light">
                             <tr class="d-flex">
                                 <th class="col-2">Kid</th>
-                                <th class="col-5">Goal</th>
+                                <th class="col-8">Goal</th>
                             </tr>
                         </thead>
                         <tbody>
                         <tr class="d-flex">
-                            <th class="col-2">{{ form.cal_goal1.label }}</th>
-                            <td class="col-5">{{ form.cal_goal1(class_="col-12") }} </td>
+                            <th class="col-2">{{ form.cal_goal.label }}</th>
+                            <td class="col-8">{{ form.cal_goal(class_="col-12") }} </td>
                         </tr>
                         <tr class="d-flex">
-                            <th class="col-2">{{ form.sam_goal1.label }}</th>
-                            <td class="col-5">{{ form.sam_goal1(class_="col-12") }} </td>
+                            <th class="col-2">{{ form.sam_goal.label }}</th>
+                            <td class="col-8">{{ form.sam_goal(class_="col-12") }} </td>
                         </tr>
                         <tr class="d-flex">
-                            <th class="col-2">{{ form.kay_goal1.label }}</th>
-                            <td class="col-5">{{ form.kay_goal1(class_="col-12") }} </td>
+                            <th class="col-2">{{ form.kay_goal.label }}</th>
+                            <td class="col-8">{{ form.kay_goal(class_="col-12") }} </td>
                         </tr>
                         <tr class="d-flex">
-                            <th class="col-2">{{ form.seth_goal1.label }}</th>
-                            <td class="col-5">{{ form.seth_goal1(class_="col-12") }} </td>
+                            <th class="col-2">{{ form.seth_goal.label }}</th>
+                            <td class="col-8">{{ form.seth_goal(class_="col-12") }} </td>
                         </tr>
                         </tbody>
                     </table>
@@ -204,15 +138,22 @@
 
             document.getElementById('date').value = date;
 
+            document.getElementById('scripture_ass').value = formData['scripture_ass'];
             document.getElementById('scripture_ref').value = formData['scripture_ref'];
             document.getElementById('scripture').value = formData['scripture'];
 
-            document.getElementById('discussion_ref').value = formData['discussion_ref'];
-            document.getElementById('discussion_question').value = formData['discussion_question'];
-
-            for (i = 0; i < day_lst.length; ++i) {
-                document.getElementById(day_lst[i] + '_job').value = formData[day_lst[i] + '_job'];
-            }
+<!--            for (i = 0; i < day_lst.length; ++i) {-->
+<!--                document.getElementById(day_lst[i] + '_job_cal').value = formData[day_lst[i] + '_job_cal'];-->
+<!--            }-->
+<!--            for (i = 0; i < day_lst.length; ++i) {-->
+<!--                document.getElementById(day_lst[i] + '_job_sam').value = formData[day_lst[i] + '_job_sam'];-->
+<!--            }-->
+<!--            for (i = 0; i < day_lst.length; ++i) {-->
+<!--                document.getElementById(day_lst[i] + '_job_kay').value = formData[day_lst[i] + '_job_kay'];-->
+<!--            }-->
+<!--            for (i = 0; i < day_lst.length; ++i) {-->
+<!--                document.getElementById(day_lst[i] + '_job_seth').value = formData[day_lst[i] + '_job_seth'];-->
+<!--            }-->
             for (i = 0; i < kid_lst.length; ++i) {
                 document.getElementById(kid_lst[i] + '_book').value = formData[kid_lst[i] + '_book'];
                 document.getElementById(kid_lst[i] + '_goal1').value = formData[kid_lst[i] + '_goal1'];
@@ -243,3 +184,98 @@
     {% endblock scripts %}
 
 {% endblock body %}
+
+
+<!--                <div class="form-row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col">
+                                <h1>Discussion Question for the Week</h1>
+                            </div>
+                        </div>
+                        <div class="row" id="discussion_question_enter">
+                            <div class="col">
+                                <table class="table table-sm">
+                                    <thead class="thead-light">
+                                    <tr class="d-flex">
+                                        <th class="col-2"></th>
+                                        <th class="col-5"></th>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="d-flex">
+                                        <th class="col-2">Reference</th>
+                                        <td class="col-5">{{ form.discussion_ref(class_="col-12") }}</td>
+                                    </tr>
+                                    <tr class="d-flex">
+                                        <th class="col-2">Question</th>
+                                        <td class="col-5">{{ form.discussion_question(cols="46", rows="10") }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+-->
+
+<!--            document.getElementById('discussion_ref').value = formData['discussion_ref'];-->
+<!--            document.getElementById('discussion_question').value = formData['discussion_question'];-->
+
+<!--<div class="form-row">
+                    <h1>Jobs</h1>
+                    <table class="table table-sm">
+                        <thead class="thead-light">
+                        <tr class="d-flex">
+                            <th class="col-2">Day of Week</th>
+                            <th class="col-3">Calvin</th>
+                            <th class="col-3">Samuel</th>
+                            <th class="col-3">Kay</th>
+                            <th class="col-3">Seth</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="d-flex">
+                            <th class="col-2">{{ form.mon_job_cal.label }}</th>
+                            <td class="col-3">{{ form.mon_job_cal(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.mon_job_sam(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.mon_job_kay(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.mon_job_seth(class_="col-12") }}</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-2">{{ form.tue_job_cal.label }}</th>
+                            <td class="col-3">{{ form.tue_job_cal(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.tue_job_sam(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.tue_job_kay(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.tue_job_seth(class_="col-12") }}</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-2">{{ form.wed_job_cal.label }}</th>
+                            <td class="col-3">{{ form.wed_job_cal(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.wed_job_sam(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.wed_job_kay(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.wed_job_seth(class_="col-12") }}</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-2">{{ form.thu_job_cal.label }}</th>
+                            <td class="col-3">{{ form.thu_job_cal(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.thu_job_sam(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.thu_job_kay(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.thu_job_seth(class_="col-12") }}</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-2">{{ form.fri_job_cal.label }}</th>
+                            <td class="col-3">{{ form.fri_job_cal(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.fri_job_sam(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.fri_job_kay(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.fri_job_seth(class_="col-12") }}</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-2">{{ form.sat_job_cal.label }}</th>
+                            <td class="col-3">{{ form.sat_job_cal(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.sat_job_sam(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.sat_job_kay(class_="col-12") }}</td>
+                            <td class="col-3">{{ form.sat_job_seth(class_="col-12") }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>-->

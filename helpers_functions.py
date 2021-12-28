@@ -10,6 +10,12 @@ from functools import wraps
 from collections import defaultdict
 from flask import url_for, redirect
 from flask_login import current_user
+from reportlab.lib import colors
+from reportlab.lib.units import inch
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.pagesizes import letter, landscape, portrait
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak, NextPageTemplate, \
+    PageTemplate, Frame
 
 import helpers_constants
 
@@ -28,29 +34,41 @@ def requires_access_level(access_level):
 def weekly_data_json(form):
     data = {
         "week_start_date": str(form.weekof.data),
+
+        "scripture_ass": form.scripture_ass.data,
         "scripture_ref": form.scripture_ref.data,
         "scripture": form.scripture.data,
-        "discussion_ref": form.discussion_ref.data,
-        "discussion_question": form.discussion_question.data,
-        "mon_job": form.mon_job.data,
-        "tue_job": form.tue_job.data,
-        "wed_job": form.wed_job.data,
-        "thu_job": form.thu_job.data,
-        "fri_job": form.fri_job.data,
-        "sat_job": form.sat_job.data,
-        "calvin_goal1": form.cal_goal1.data,
-        # "calvin_goal2": form.cal_goal2.data,
-        # "calvin_goal3": form.cal_goal3.data,
-        # "calvin_goal4": form.cal_goal4.data,
-        "samuel_goal1": form.sam_goal1.data,
-        # "samuel_goal2": form.sam_goal2.data,
-        # "samuel_goal3": form.sam_goal3.data,
-        # "samuel_goal4": form.sam_goal4.data,
-        "kay_goal1": form.kay_goal1.data,
-        # "kay_goal2": form.kay_goal2.data,
-        # "kay_goal3": form.kay_goal3.data,
-        # "kay_goal4": form.kay_goal4.data,
-        "seth_goal1": form.seth_goal1.data,
+
+        "mon_job_cal": form.mon_job_cal.data,
+        "tue_job_cal": form.tue_job_cal.data,
+        "wed_job_cal": form.wed_job_cal.data,
+        "thu_job_cal": form.thu_job_cal.data,
+        "fri_job_cal": form.fri_job_cal.data,
+        "sat_job_cal": form.sat_job_cal.data,
+        "mon_job_sam": form.mon_job_sam.data,
+        "tue_job_sam": form.tue_job_sam.data,
+        "wed_job_sam": form.wed_job_sam.data,
+        "thu_job_sam": form.thu_job_sam.data,
+        "fri_job_sam": form.fri_job_sam.data,
+        "sat_job_sam": form.sat_job_sam.data,
+        "mon_job_kay": form.mon_job_kay.data,
+        "tue_job_kay": form.tue_job_kay.data,
+        "wed_job_kay": form.wed_job_kay.data,
+        "thu_job_kay": form.thu_job_kay.data,
+        "fri_job_kay": form.fri_job_kay.data,
+        "sat_job_kay": form.sat_job_kay.data,
+        "mon_job_seth": form.mon_job_seth.data,
+        "tue_job_seth": form.tue_job_seth.data,
+        "wed_job_seth": form.wed_job_seth.data,
+        "thu_job_seth": form.thu_job_seth.data,
+        "fri_job_seth": form.fri_job_seth.data,
+        "sat_job_seth": form.sat_job_seth.data,
+
+        "calvin_goal1": form.cal_goal.data,
+        "samuel_goal1": form.sam_goal.data,
+        "kay_goal1": form.kay_goal.data,
+        "seth_goal1": form.seth_goal.data,
+
         "calvin_book": form.cal_book.data,
         "samuel_book": form.sam_book.data,
         "kay_book": form.kay_book.data,
@@ -104,226 +122,224 @@ def new_book_information(form):
     return data
 
 
-def _time_sheets(dates, goals, name, scrip):
-    return '''
-    \\begin{{sidewaystable}}
-    \\centering
-    \\begin{{tabular}}{{|l|p{{1.5cm}}|p{{1.5cm}}|p{{1.5cm}}|p{{1.5cm}}|p{{1.5cm}}|p{{1.5cm}}|p{{1.5cm}}|p{{1.5cm}}|p{{1.5cm}}|p{{1.5cm}}|p{{1.5cm}}|p{{1.5cm}}|}}
-    \\multicolumn{{7}}{{l}}{{Name: {12}}} \\\\
-    \\multicolumn{{13}}{{p{{25cm}}}}{{Scripture: {13}}} \\\\
-    \\multicolumn{{7}}{{l}}{{}} \\\\
-    \\multicolumn{{7}}{{l}}{{}} \\\\
-    \\cline{{2-13}}
-    \\multicolumn{{1}}{{l}}{{}} & \\multicolumn{{2}}{{|c|}}{{Monday}} & \\multicolumn{{2}}{{c|}}{{Tuesday}} & \\multicolumn{{2}}{{c|}}{{Wednesday}} & \\multicolumn{{2}}{{c|}}{{Thursday}} & \\multicolumn{{2}}{{c|}}{{Friday}} & \\multicolumn{{2}}{{c|}}{{Saturday}} \\\\
-    \\multicolumn{{1}}{{l}}{{}} & \\multicolumn{{2}}{{|c|}}{{{0}}} & \\multicolumn{{2}}{{c|}}{{{1}}} & \\multicolumn{{2}}{{c|}}{{{2}}} & \\multicolumn{{2}}{{c|}}{{{3}}} & \\multicolumn{{2}}{{c|}}{{{4}}} & \\multicolumn{{2}}{{c|}}{{{5}}} \\\\
-    \\cline{{2-13}}
-    \\cline{{2-13}}
-    \\multicolumn{{1}}{{l|}}{{}} & Start & Stop & Start & Stop & Start & Stop & Start & Stop & Start & Stop & Start & Stop \\\\
-    \\hline
-    \\hline
-    Math & & & & & & & & & & & &\\\\[70pt]
-    \\hline
-    Reading & & & & & & & & & & & &\\\\[70pt]
-    \\hline
-    Writing & & & & & & & & & & & &\\\\[70pt]
-    \\hline
-    Vocabulary & & & & & & & & & & & &\\\\[70pt]
-    \\hline
-    Discussion &
-    \\multicolumn{{2}}{{|p{{3cm}}|}}{{{6}}} &
-    \\multicolumn{{2}}{{p{{3cm}}|}}{{{7}}} &
-    \\multicolumn{{2}}{{p{{3cm}}|}}{{{8}}} &
-    \\multicolumn{{2}}{{p{{3cm}}|}}{{{9}}} &
-    \\multicolumn{{2}}{{p{{3cm}}|}}{{{10}}} &
-    \\multicolumn{{2}}{{p{{3cm}}|}}{{{11}}}
-    \\\\[70pt]
-    \\hline
-    \\end{{tabular}}
-    \\end{{sidewaystable}}
-    '''.format(
-        dates[0], dates[1], dates[2], dates[3], dates[4], dates[5],  # 0-5
-        goals[0], goals[1], goals[2], goals[3], goals[4], goals[5],  # 6-11
-        name,  # 12
-        scrip  # 13
+def _header_create(name, scripture_dict, kid_dict):
+    header_text = f'<font size=20> {name} </font>' \
+                  '<br />' \
+                  '<br />' \
+                  f'"{scripture_dict["scripture"]}" ({scripture_dict["reference"]})' \
+                  '<br />' \
+                  '<br />' \
+                  f'<i>Scripture Reading Assignment</i>: {scripture_dict["assignment"]}' \
+                  '<br />' \
+                  '<br />' \
+                  f'<i>Goal</i>: {kid_dict["goal"]}' \
+                  '<br />' \
+                  '<br />' \
+                  '<br />' \
+
+    p_style = ParagraphStyle(name='Normal', fontName='Times', fontSize=12)
+    paragraph = Paragraph(header_text, style=p_style)
+    return paragraph
+
+def _table_body(name, dates, kid_dict):
+    days_of_week = ['', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    if name == 'Calvin':
+        return [
+            [f'{days[0]}\n{days[1]}' for days in zip(days_of_week, [''] + dates)],
+            [f'Math ({kid_dict["book"]}) \n (1.5-2 hrs.)', 'X', '', '', '', '', '', ''],
+            ['Reading: Scriptures \n (10 min.)', '', '', '', '', '', '', ''],
+            ['Reading: Classics \n (20 min.)', 'X', '', '', '', '', '', ''],
+            ['Reading: Science \n (10 min.)', 'X', '', '', '', '', '', ''],
+            ['Reading: Other \n (10 min.)', 'X', '', '', '', '', '', ''],
+            ['Letters: Vocab \n (15 min.)', 'X', '', '', '', '', '', ''],
+            ['Letters: Writing \n (15 min.)', 'X', '', '', '', '', '', ''],
+            ['Music \n (15-30 min.)', '', '', '', '', '', '', ''],
+            ['Job: Pickup \n (5 min.)', 'X', '', '', '', '', '', ''],
+            ['Job:\n ', 'X'] + kid_dict['jobs'],
+        ]
+    elif name in ['Samuel', 'Kay']:
+        return [
+            [f'{days[0]}\n{days[1]}' for days in zip(days_of_week, [''] + dates)],
+            [f'Math ({kid_dict["book"]}) \n (1.5-2 hrs.)', 'X', '', '', '', '', '', ''],
+            ['Reading: Scriptures \n (10 min.)', '', '', '', '', '', '', ''],
+            ['Reading: Other \n (110 min.)', 'X', '', '', '', '', '', ''],
+            ['Letters: Vocab \n (15 min.)', 'X', '', '', '', '', '', ''],
+            ['Letters: Writing \n (15 min.)', 'X', '', '', '', '', '', ''],
+            ['Music \n (15-30 min.)', '', '', '', '', '', '', ''],
+            ['Job: Pickup \n (5 min.)', 'X', '', '', '', '', '', ''],
+            ['Job:\n ', 'X'] + kid_dict['jobs'],
+        ]
+    elif name == 'Seth':
+        return [
+            [f'{days[0]}\n{days[1]}' for days in zip(days_of_week, [''] + dates)],
+            [f'Math ({kid_dict["book"]}) \n (1.5-2 hrs.)', 'X', '', '', '', '', '', ''],
+            ['Reading: Scriptures \n (10 min.)', '', '', '', '', '', '', ''],
+            ['Reading: Other \n (110 min.)', 'X', '', '', '', '', '', ''],
+            ['Letters: Writing \n (15 min.)', 'X', '', '', '', '', '', ''],
+            ['Music \n (15-30 min.)', '', '', '', '', '', '', ''],
+            ['Job: Pickup \n (5 min.)', 'X', '', '', '', '', '', ''],
+            ['Job:\n ', 'X'] + kid_dict['jobs'],
+        ]
+
+def _table_create(name, dates, kid_dict):
+    table = Table(
+        _table_body(name, dates, kid_dict),
+    )
+    style = TableStyle(
+        [
+            # top margin
+            ('BACKGROUND', (1, 0), (-1, 0), colors.lightgrey),
+            ('LEFTPADDING', (1, 0), (-1, 0), 12),
+            ('RIGHTPADDING', (1, 0), (-1, 0), 12),
+            ('BOTTOMPADDING', (1, 0), (-1, 0), 12),
+            ('ALIGN', (1, 0), (-1, 0), 'CENTER'),
+            ('GRID', (1, 0), (-1, 0), 1, colors.black),
+
+            # left margin
+            ('BACKGROUND', (0, 1), (0, -1), colors.lightgrey),
+            ('ALIGN', (0, 1), (0, -1), 'LEFT'),
+            ('VALIGN', (0, 1), (0, -1), 'TOP'),
+            ('GRID', (0, 1), (0, -1), 1, colors.black),
+
+            # body
+            ('ALIGN', (1, 1), (-1, -1), 'LEFT'),
+            ('VALIGN', (1, 1), (-1, -1), 'TOP'),
+            ('GRID', (1, 1), (-1, -1), 1, colors.black),
+
+            # all
+            ('FONTNAME', (0, 0), (-1, 0), 'Times-Roman'),
+            ('FONTSIZE', (0, 0), (-1, 0), 12),
+
+            # Sunday
+            ('FONTSIZE', (1, 1), (1, -1), 20),
+            ('ALIGN', (1, 1), (1, -1), 'CENTER'),
+        ]
+    )
+    table.setStyle(style)
+
+    return table
+
+def _timesheet_create(name, dates, scripture_dict, kid_dict):
+    header = _header_create(name, scripture_dict, kid_dict)
+    table = _table_create(name, dates, kid_dict)
+    return [header, table]
+
+def _boiler_header_create(name, date):
+    boiler_header = Table(
+        [
+            [f'{name}', f'{date}'],
+            ['', '']
+        ],
+        colWidths=250
+    )
+    style = TableStyle(
+        [
+            ('ALIGN', (0, 0), (0, 0), 'LEFT'),
+            ('ALIGN', (1, 0), (1, 0), 'RIGHT'),
+            ('FONTNAME', (0, 0), (-1, -1), 'Times-Roman'),
+            ('FONTSIZE', (0, 0), (-1, -1), 16),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('LINEABOVE', (0, 0), (-1, 0), 1, colors.black, None, None, None, 4, 0.5),
+            ('LINEBELOW', (0, 0), (-1, 0), 1, colors.black, None, None, None, 4, 0.5),
+            # line commands are like
+            # op, start, stop, weight, colour, cap, dashes, join, linecount, linespacing
+
+            ('BOTTOMPADDING', (0, -1), (-1, -1), 40),
+        ]
+    )
+    boiler_header.setStyle(style)
+    return boiler_header
+
+def _math_table_create(math_book):
+    math_table = Table(
+        [
+            [f'Math Assignment ({math_book})', ''],
+            ['Start Chapter:', 'First Problem:'],
+            ['End Chapter:', 'Last Problem:'],
+            ['Start Time:', 'End Time:'],
+            ['Problems Missed:', ''],
+        ],
+        colWidths=250
+    )
+    style = TableStyle(
+        [
+            ('SPAN', (0, 0), (1, 0)),
+            ('SPAN', (0, 4), (1, 4)),
+            ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, -1), 'Times-Roman'),
+            ('FONTSIZE', (0, 0), (-1, -1), 12),
+            ('GRID', (0, 1), (-1, -1), 1, colors.black),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+        ]
+    )
+    math_table.setStyle(style)
+    return math_table
+
+def _scripture_table_create():
+    scripture_table = Table(
+        [
+            ['Scriptures Questions, Principles, and Commentary', '', ''],
+            ['Start Book:', 'Start Chapter:', 'Start Verse:'],
+            ['End Book:', 'End Chapter:', 'End Verse:'],
+            ['Comments:', '', ''],
+        ],
+        colWidths=167
+    )
+    style = TableStyle(
+        [
+            ('TOPPADDING', (0, 0), (-1, 0), 100),
+            ('SPAN', (0, 0), (-1, 0)),
+            ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, -1), 'Times-Roman'),
+            ('FONTSIZE', (0, 0), (-1, -1), 12),
+            ('GRID', (0, 1), (-1, 2), 1, colors.black),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+
+            ('TOPPADDING', (0, 3), (-1, -1), 14),
+            ('SPAN', (0, 3), (-1, -1)),
+        ]
+    )
+    scripture_table.setStyle(style)
+    return scripture_table
+
+def boiler_sheet_pdf_create(name, date, math_book):
+    boiler_header = _boiler_header_create(name, date)
+    math_table = _math_table_create(math_book)
+    scripture_table = _scripture_table_create()
+    return [boiler_header, math_table, scripture_table]
+
+def weekly_form_pdf_create(date_lst, scripture_dict, kids_dict):
+    pdf = SimpleDocTemplate('weekly_time_sheet.pdf', pagesize=landscape(letter), leftMargin=35, rightMargin=35, topMargin=35, bottomMargin=35)
+
+    p_frame = Frame(
+        0.5 * inch, 0.5 * inch, 7.5 * inch, 10 * inch,
+        leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0,
+        id='portrait_frame'
+    )
+    l_frame = Frame(
+        0.5 * inch, 0.5 * inch, 10 * inch, 7.5 * inch,
+        leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0,
+        id='landscape_frame'
     )
 
-def _time_sheet(dates, discussion_question, name, scrip, goals):
-    return '''
-    \\begin{{sidewaystable}}
-    \\centering
-    \\begin{{tabular}}{{|l|p{{3.5cm}}|p{{3.5cm}}|p{{3.5cm}}|p{{3.5cm}}|p{{3.5cm}}|p{{3.5cm}}|}}
-    \\multicolumn{{7}}{{l}}{{Name: {8}}} \\\\
-    \\multicolumn{{7}}{{p{{25cm}}}}{{Scripture: {9}}} \\\\
-    \\multicolumn{{7}}{{l}}{{}} \\\\
-    \\multicolumn{{7}}{{l}}{{}} \\\\
-    \\cline{{2-7}}
-    \\multicolumn{{1}}{{l}}{{}} & \\multicolumn{{1}}{{|c|}}{{Monday}} & \\multicolumn{{1}}{{c|}}{{Tuesday}} & \\multicolumn{{1}}{{c|}}{{Wednesday}} & \\multicolumn{{1}}{{c|}}{{Thursday}} & \\multicolumn{{1}}{{c|}}{{Friday}} & \\multicolumn{{1}}{{c|}}{{Saturday}} \\\\
-    \\multicolumn{{1}}{{l}}{{}} & \\multicolumn{{1}}{{|c|}}{{{0}}} & \\multicolumn{{1}}{{c|}}{{{1}}} & \\multicolumn{{1}}{{c|}}{{{2}}} & \\multicolumn{{1}}{{c|}}{{{3}}} & \\multicolumn{{1}}{{c|}}{{{4}}} & \\multicolumn{{1}}{{c|}}{{{5}}} \\\\
-    \\cline{{2-7}}
-    \\cline{{2-7}}
-    \\multicolumn{{1}}{{l|}}{{}} & \\multicolumn{{1}}{{|c|}}{{Time}} & \\multicolumn{{1}}{{c|}}{{Time}} & \\multicolumn{{1}}{{c|}}{{Time}} & \\multicolumn{{1}}{{c|}}{{Time}} & \\multicolumn{{1}}{{c|}}{{Time}} & \\multicolumn{{1}}{{c|}}{{Time}} \\\\
-    \\hline
-    \\hline 
-    Math & & & & & & \\\\[70pt]
-    \\hline
-    Reading & & & & & & \\\\[140pt]
-    \\hline
-    Writing & & & & & & \\\\[70pt]
-    \\hline
-    \\hline
-    &
-    \\multicolumn{{3}}{{||p{{10.5cm}}}}{{Goal: {6}}} &
-    \\multicolumn{{3}}{{||p{{10.5cm}}|}}{{Question of the Week: {7}}}
-    \\\\[70pt]
-    \\hline
-    \\end{{tabular}}
-    \\end{{sidewaystable}}
-    '''.format(
-        dates[0], dates[1], dates[2], dates[3], dates[4], dates[5],  # 0-5
-        goals[0],  # 6
-        '{0} (from {1})'.format(discussion_question[1], discussion_question[0]),  # 7
-        name,  # 8
-        scrip  # 9
-    )
+    portrait_template = PageTemplate(id='portrait', frames=[p_frame], pagesize=letter)
+    landscape_template = PageTemplate(id='landscape', frames=[l_frame], pagesize=landscape(letter))
+    pdf.addPageTemplates([landscape_template, portrait_template])
 
+    elems = []
+    for kid in kids_dict.keys():
+        form_elem = _timesheet_create(kid, date_lst, scripture_dict, kids_dict[kid])
+        elems += form_elem
 
-def weekly_form_latex_create(kids, books, dates, scripture, discussion_question, goals):
-    header = r'''
-    \documentclass[10pt,twoside,letterpaper,oldfontcommands,openany]{memoir}
-    \usepackage{rotating, caption}
-    \usepackage[margin=0.25in]{geometry}
-    \newcommand{\tabitem}{~~\llap{\textbullet}~~}
-    \pagenumbering{gobble}
-    \begin{document}
-    '''
+        for date in date_lst:
+            elems.append(NextPageTemplate('portrait'))
+            elems.append(PageBreak())
+            elems += boiler_sheet_pdf_create(kid, date, kids_dict[kid]['book'])
 
-    footer = r'''\end{document}'''
-
-    math_scripture = ''''''
-    for i in itertools.product(zip(kids, books), dates):
-        math_scripture += '''
-        \\clearpage
-        \\newpage
-        \\makeatletter
-        \\setlength{{\@fptop}}{{35pt}}
-        \\makeatother
-        \\begin{{table}}
-        \\caption*{{Scripture Questions and Principles}}
-        \\begin{{tabular}}{{| l | l | l | l | l | l |}}
-        \\hline
-        \\multicolumn{{3}}{{|p{{9.5cm}}|}}{{Name: {0}}} & \\multicolumn{{3}}{{|p{{9.5cm}}|}}{{Date: {2}}} \\\\[20pt]
-        \\hline
-        \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Book: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Chapter: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Verse: }} \\\\[20pt]
-        \\hline
-        \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Book: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Chapter: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Verse: }} \\\\[20pt]
-        \\hline
-        \\multicolumn{{6}}{{l}}{{}} \\\\[20pt]
-        \\multicolumn{{6}}{{l}}{{Comment:}} \\\\[20pt]
-        \\end{{tabular}}
-        \\end{{table}}
-        
-        \\vspace{{5 cm}}
-
-        \\makeatletter
-        \\setlength{{\@fptop}}{{35pt}}
-        \\makeatother
-        \\begin{{table}}
-        \\caption*{{Math Assignment}}
-        \\begin{{tabular}}{{| l | l | l | l | l | l |}}
-        \\hline
-        \\multicolumn{{3}}{{|p{{9.5cm}}|}}{{Name: {0}}} & \\multicolumn{{3}}{{|p{{9.5cm}}|}}{{Book: {1}}} \\\\[20pt]
-        \\hline
-        \\multicolumn{{3}}{{|l|}}{{Start Chapter: }} & \\multicolumn{{3}}{{|l|}}{{First Problem: }} \\\\[20pt]
-        \\hline
-        \\multicolumn{{3}}{{|l|}}{{End Chapter: }} & \\multicolumn{{3}}{{|l|}}{{Last Problem: }} \\\\[20pt]
-        \\hline
-        \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Date: {2}}} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Time: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Time: }} \\\\[20pt]
-        \\hline
-        \\multicolumn{{6}}{{|l|}}{{Problems Missed: }} \\\\[20pt]
-        \\hline
-        \\end{{tabular}}
-        \\end{{table}}
-        '''.format(
-            i[0][0], i[0][1], i[1]
-        )
-        if i[1] == dates[-1]:
-            sunday_date = datetime.datetime.strftime(datetime.datetime.strptime(dates[-1], '%Y-%m-%d') + datetime.timedelta(days=1), '%Y-%m-%d')
-            math_scripture += '''
-            \\clearpage
-            \\newpage
-            \\makeatletter
-            \\setlength{{\@fptop}}{{35pt}}
-            \\makeatother
-            \\begin{{table}}
-            \\caption*{{Scripture Questions and Principles}}
-            \\begin{{tabular}}{{| l | l | l | l | l | l |}}
-            \\hline
-            \\multicolumn{{3}}{{|p{{9.5cm}}|}}{{Name: {0}}} & \\multicolumn{{3}}{{|p{{9.5cm}}|}}{{Date: {1}}} \\\\[20pt]
-            \\hline
-            \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Book: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Chapter: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{Start Verse: }} \\\\[20pt]
-            \\hline
-            \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Book: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Chapter: }} & \\multicolumn{{2}}{{|p{{6.33cm}}|}}{{End Verse: }} \\\\[20pt]
-            \\hline
-            \\multicolumn{{6}}{{l}}{{}} \\\\[20pt]
-            \\multicolumn{{6}}{{l}}{{Comment:}} \\\\[20pt]
-            \\end{{tabular}}
-            \\end{{table}}
-            '''.format(i[0][0], sunday_date)
-
-    scrip = '``{0}" ({1})'.format(scripture[1], scripture[0])  # 13
-    time_sheets = ''''''
-    for name in kids:
-        time_sheets += _time_sheet(dates, discussion_question, name, scrip, goals[name])
-
-    content = header + time_sheets + math_scripture + footer
-    print(content)
-
-    with open('weekly_time_sheet.tex', 'w') as f:
-         f.write(content)
-
-    subprocess.Popen(['sudo', '/usr/local/bin/laton', 'weekly_time_sheet.tex'])
-
-
-def weekly_jobs_latex_create(jobs):
-    header = r'''
-    \documentclass[10pt,twoside,letterpaper,oldfontcommands,openany]{memoir}
-    \usepackage{rotating, caption}
-    \usepackage[margin=0.25in]{geometry}
-    \newcommand{\tabitem}{~~\llap{\textbullet}~~}
-    \pagenumbering{gobble}
-    \begin{document}
-    '''
-
-    footer = r'''\end{document}'''
-
-    jobs = '''
-    \\makeatletter
-    \\setlength{{\@fptop}}{{5pt}}
-    \\makeatother
-    \\begin{{sidewaystable}}
-    \\footnotesize
-    \\centering
-    \\begin{{tabular}}{{| p{{3.5cm}} | p{{3.5cm}} | p{{3.5cm}} | p{{3.5cm}} | p{{3.5cm}} | p{{3.5cm}} |}}
-    \\hline\\hline
-     Monday & Tuesday & Wednesday & Thursday & Friday & Saturday \\\\[10pt]
-    \\hline\\hline
-    \\tabitem {0} & \\tabitem {1} & \\tabitem {2} & \\tabitem {3} & \\tabitem {4} & \\tabitem {5} \\\\
-    \\hline
-    \\tabitem {6} & \\tabitem {6} & \\tabitem {6} & \\tabitem {6} & \\tabitem {6} & \\tabitem {6} \\\\
-    \\hline
-    \\tabitem 4:30 & \\tabitem 4:30 & \\tabitem 4:30 & \\tabitem 4:30 & \\tabitem 4:30 & \\tabitem 4:30 \\\\
-    \\hline\\hline
-    \\end{{tabular}}
-    \\end{{sidewaystable}}
-    '''.format(jobs[0], jobs[1], jobs[2], jobs[3], jobs[4], jobs[5], '5 minute pickup')
-
-    content = header + jobs + footer
-    print(content)
-
-    with open('weekly_jobs_sheet.tex', 'w') as f:
-         f.write(content)
-
-    subprocess.Popen(['sudo', '/usr/local/bin/laton', 'weekly_jobs_sheet.tex'])
+        elems.append(NextPageTemplate('landscape'))
+        elems.append(PageBreak())
+    elems.pop()
+    pdf.build(elems)
 
 
 def goals_latex_create(kids, goals):
