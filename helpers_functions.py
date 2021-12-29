@@ -13,6 +13,7 @@ from flask_login import current_user
 from reportlab.lib import colors
 from reportlab.lib.units import inch
 from reportlab.lib.styles import ParagraphStyle
+from reportlab.graphics.shapes import Line, Drawing
 from reportlab.lib.pagesizes import letter, landscape, portrait
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak, NextPageTemplate, \
     PageTemplate, Frame
@@ -341,98 +342,80 @@ def weekly_form_pdf_create(date_lst, scripture_dict, kids_dict):
     elems.pop()
     pdf.build(elems)
 
+def weekly_summary_create(scripture_dict, kids_dict):
+    pdf = SimpleDocTemplate('weekly_summary.pdf', pagesize=letter, leftMargin=35, rightMargin=35, topMargin=35, bottomMargin=35)
 
-def goals_latex_create(kids, goals):
-    '''
-    \\begin{{sidewaystable}}
-    \\footnotesize
-    \\centering
-    \\begin{{tabular}}{{| p{{3.5cm}} | p{{3.5cm}} | p{{3.5cm}} | p{{3.5cm}} | p{{3.5cm}} | p{{3.5cm}} |}}
-    \\hline\\hline
+    scripture_body = '<i><font size=16>Scriptures</font></i>'\
+                  '<br />' \
+                  '<br />'\
+                  f'<i>Scripture</i>: "{scripture_dict["scripture"]}" ({scripture_dict["reference"]})' \
+                  '<br />' \
+                  '<br />'
+    p_style = ParagraphStyle(name='Normal', fontName='Times', fontSize=10)
+    scripture_paragraph = Paragraph(scripture_body, style=p_style)
 
-    '''
+    scripture_ass_body = '<br />' \
+                  f'<i>Reading Assignment</i>: {scripture_dict["assignment"]}' \
+                  '<br />' \
+                  '<br />'
+    scripture_ass_paragraph = Paragraph(scripture_ass_body, style=p_style)
 
-    header = r'''
-    \documentclass[10pt,twoside,letterpaper,oldfontcommands,openany]{memoir}
-    \usepackage{rotating, caption}
-    \usepackage[margin=0.25in]{geometry}
-    \newcommand{\tabitem}{~~\llap{\textbullet}~~}
-    \pagenumbering{gobble}
-    \begin{document}
-    '''
+    goals_header = '<br />' \
+                  f'<i>Goals</i>' \
+                  '<br />' \
+                  '<br />'
+    p_style = ParagraphStyle(name='Normal', fontName='Times', fontSize=16)
+    goals_paragraph = Paragraph(goals_header, style=p_style)
 
-    footer = r'''\end{document}'''
+    goals_body = [[name, dict['goal']] for name, dict in kids_dict.items()]
+    goals_table = Table(goals_body)
+    t_style = TableStyle(
+        [
+            ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+            ('TOPPADDING', (0, 0), (-1, -1), 12),
+            ('ALIGN', (1, 0), (-1, 0), 'LEFT'),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('FONTNAME', (0, 0), (-1, -1), 'Times-Roman'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ]
+    )
+    goals_table.setStyle(t_style)
 
-    goals_table = r'''
-    \begin{sidewaystable}
-    \footnotesize
-    \centering
-    \begin{tabular}{| l | p{3.5cm} | p{3.5cm}  | p{3.5cm}  | p{3.5cm} |}
-    \hline
-    & Spiritual Goal & Physical Goal & Social Goal & Intellectual Goal \\
-    \hline\hline
-    '''
-    for kid in kids:
-        goals_table += r'''{kid} & {g1} & & &  \\ \hline '''.format(kid=kid, g1=goals[kid][0])
+    buffer = '<br />' \
+             '<br />'
+    buffer_paragraph = Paragraph(buffer, style=p_style)
 
-    goals_table += r'''
-    \end{tabular}
-    \end{sidewaystable}
-    '''
+    jobs_body = '<br />' \
+                  '<i>Jobs</i>' \
+                  '<br />' \
+                  '<br />'
+    p_style = ParagraphStyle(name='Normal', fontName='Times', fontSize=16)
+    jobs_paragraph = Paragraph(jobs_body, style=p_style)
 
-    content = header + goals_table + footer
-    print(content)
+    jobs_body = [['', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']] + [[name] + dict['jobs'] for name, dict in kids_dict.items()]
+    jobs_table = Table(jobs_body)
+    t_style = TableStyle(
+        [
+            ('BACKGROUND', (0, 1), (0, -1), colors.lightgrey),
+            ('BACKGROUND', (1, 0), (-1, 0), colors.lightgrey),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+            ('TOPPADDING', (0, 0), (-1, -1), 12),
+            ('ALIGN', (1, 0), (-1, 0), 'CENTER'),
+            ('GRID', (1, 0), (-1, 0), 1, colors.black),
+            ('GRID', (0, 1), (-1, -1), 1, colors.black),
+            ('FONTNAME', (0, 0), (-1, -1), 'Times-Roman'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ]
+    )
+    jobs_table.setStyle(t_style)
 
-    with open('goals_table.tex', 'w') as f:
-        f.write(content)
+    line = Drawing(100, 1)
+    line.add(Line(0, 0, 530, 0))
 
-    subprocess.Popen(['sudo', '/usr/local/bin/laton', 'goals_table.tex'])
+    elems = [scripture_paragraph, scripture_ass_paragraph, line, goals_paragraph, goals_table, buffer_paragraph, line, jobs_paragraph, jobs_table]
 
-
-
-
-
-def scriptures_latex_create(df):
-    df.sort_values('week_start_date', inplace=True)
-
-    header = r'''
-    \documentclass[10pt,twoside,letterpaper,oldfontcommands,openany]{memoir}
-    \usepackage{rotating, caption}
-    \usepackage[margin=0.25in]{geometry}
-    \newcommand{\tabitem}{~~\llap{\textbullet}~~}
-    \pagenumbering{gobble}
-    \begin{document}
-    '''
-
-    footer = r'''\end{document}'''
-
-    scriptures_table = r'''
-    \begin{sidewaystable}
-    \centering
-    \begin{tabular}{| l | l | p{20cm} |}
-    \hline
-     Start Date & Reference & Scriptures \\
-    \hline\hline
-    '''
-    for scripture in df.values:
-        if scripture[1] == 'Review Time!':
-            scriptures_table += r'''{date} & Review &  \\ \hline'''.format(date=scripture[2])
-        else:
-            scriptures_table += r'''{date} & {ref} & {scripture} \\ \hline'''.format(date=scripture[2], ref=scripture[1], scripture=scripture[0])
-
-    scriptures_table += r'''
-    \end{tabular}
-    \end{sidewaystable}
-    '''
-
-    # content = header + 'hey' + footer
-    content = header + scriptures_table + footer
-
-    with open('scripture_table.tex', 'w') as f:
-        f.write(content)
-
-    subprocess.Popen(['sudo', '/usr/local/bin/laton', 'scripture_table.tex'])
-
+    pdf.build(elems)
 
 def _problem_list_create(first, last, less_num):
     alphabet = 'abcdefghijklmnopqrstuvwxyz'

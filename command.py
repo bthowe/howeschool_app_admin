@@ -154,13 +154,13 @@ def weekly_forms_create():
             scripture_dict,
             kids_dict
         )
-        # helpers_functions.weekly_jobs_latex_create([form.mon_job.data, form.tue_job.data, form.wed_job.data, form.thu_job.data, form.fri_job.data, form.sat_job.data])
+        helpers_functions.weekly_summary_create(
+            scripture_dict,
+            kids_dict
+        )
 
-        # todo: jobs and scripture list and goals sheets
         # todo: make an interface that is like the time sheet and that can be manipulated
         # todo: dockerize everything.
-
-
 
         data_scriptures = helpers_functions.scripture_list_json(form)
         ret_scriptures = db_forms.db['Scriptures'].insert_one(data_scriptures)
@@ -172,7 +172,7 @@ def weekly_forms_create():
 @app.route("/download_forms", methods=['GET'])
 @login_required
 def download_forms():
-    for file in ['weekly_time_sheet.pdf', 'weekly_jobs_sheet.pdf']:
+    for file in ['weekly_time_sheet.pdf', 'weekly_summary.pdf']:
         if os.path.exists(helpers_constants.filenamer(file)):
             os.rename(helpers_constants.filenamer(file), helpers_constants.filenamer('static/' + file))
 
