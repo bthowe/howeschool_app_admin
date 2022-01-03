@@ -159,9 +159,6 @@ def weekly_forms_create():
             kids_dict
         )
 
-        # todo: make an interface that is like the time sheet and that can be manipulated
-        # todo: dockerize everything.
-
         data_scriptures = helpers_functions.scripture_list_json(form)
         ret_scriptures = db_forms.db['Scriptures'].insert_one(data_scriptures)
         print('Scriptures data inserted: {}'.format(ret_scriptures))
@@ -230,3 +227,7 @@ def query_bank():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8001, debug=True)
+
+# todo: make an interface that is like the time sheet and that can be manipulated
+# todo: dockerize everything.
+# todo: just download upon submit. I don't need to have to navigate to the download page.

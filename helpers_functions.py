@@ -150,8 +150,8 @@ def _table_body(name, dates, kid_dict):
             [f'Math ({kid_dict["book"]}) \n (1.5-2 hrs.)', 'X', '', '', '', '', '', ''],
             ['Reading: Scriptures \n (10 min.)', '', '', '', '', '', '', ''],
             ['Reading: Classics \n (20 min.)', 'X', '', '', '', '', '', ''],
-            ['Reading: Science \n (10 min.)', 'X', '', '', '', '', '', ''],
-            ['Reading: Other \n (10 min.)', 'X', '', '', '', '', '', ''],
+            ['Reading: Science \n (30 min.)', 'X', '', '', '', '', '', ''],
+            ['Reading: Other \n (60 min.)', 'X', '', '', '', '', '', ''],
             ['Letters: Vocab \n (15 min.)', 'X', '', '', '', '', '', ''],
             ['Letters: Writing \n (15 min.)', 'X', '', '', '', '', '', ''],
             ['Music \n (15-30 min.)', '', '', '', '', '', '', ''],
@@ -276,7 +276,7 @@ def _math_table_create(math_book):
     math_table.setStyle(style)
     return math_table
 
-def _scripture_table_create():
+def _scripture_table_create(i):
     scripture_table = Table(
         [
             ['Scriptures Questions, Principles, and Commentary', '', ''],
@@ -286,28 +286,44 @@ def _scripture_table_create():
         ],
         colWidths=167
     )
-    style = TableStyle(
-        [
-            ('TOPPADDING', (0, 0), (-1, 0), 100),
-            ('SPAN', (0, 0), (-1, 0)),
-            ('ALIGN', (0, 0), (0, 0), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, -1), 'Times-Roman'),
-            ('FONTSIZE', (0, 0), (-1, -1), 12),
-            ('GRID', (0, 1), (-1, 2), 1, colors.black),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+    # todo: this is ugly
+    if i == 0:
+        style = TableStyle(
+            [
+                ('SPAN', (0, 0), (-1, 0)),
+                ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, -1), 'Times-Roman'),
+                ('FONTSIZE', (0, 0), (-1, -1), 12),
+                ('GRID', (0, 1), (-1, 2), 1, colors.black),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
 
-            ('TOPPADDING', (0, 3), (-1, -1), 14),
-            ('SPAN', (0, 3), (-1, -1)),
-        ]
-    )
+                ('TOPPADDING', (0, 3), (-1, -1), 14),
+                ('SPAN', (0, 3), (-1, -1)),
+            ]
+        )
+    else:
+        style = TableStyle(
+            [
+                ('TOPPADDING', (0, 0), (-1, 0), 100),
+                ('SPAN', (0, 0), (-1, 0)),
+                ('ALIGN', (0, 0), (0, 0), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, -1), 'Times-Roman'),
+                ('FONTSIZE', (0, 0), (-1, -1), 12),
+                ('GRID', (0, 1), (-1, 2), 1, colors.black),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+
+                ('TOPPADDING', (0, 3), (-1, -1), 14),
+                ('SPAN', (0, 3), (-1, -1)),
+            ]
+        )
     scripture_table.setStyle(style)
     return scripture_table
 
-def boiler_sheet_pdf_create(name, date, math_book):
+def boiler_sheet_pdf_create(name, date, math_book, i):
     boiler_header = _boiler_header_create(name, date)
-    math_table = _math_table_create(math_book)
-    scripture_table = _scripture_table_create()
-    return [boiler_header, math_table, scripture_table]
+    if i == 0:
+        return [boiler_header, _scripture_table_create(i)]
+    return [boiler_header, _math_table_create(math_book), _scripture_table_create(i)]
 
 def weekly_form_pdf_create(date_lst, scripture_dict, kids_dict):
     pdf = SimpleDocTemplate('weekly_time_sheet.pdf', pagesize=landscape(letter), leftMargin=35, rightMargin=35, topMargin=35, bottomMargin=35)
@@ -332,10 +348,10 @@ def weekly_form_pdf_create(date_lst, scripture_dict, kids_dict):
         form_elem = _timesheet_create(kid, date_lst, scripture_dict, kids_dict[kid])
         elems += form_elem
 
-        for date in date_lst:
+        for i, date in enumerate(date_lst):
             elems.append(NextPageTemplate('portrait'))
             elems.append(PageBreak())
-            elems += boiler_sheet_pdf_create(kid, date, kids_dict[kid]['book'])
+            elems += boiler_sheet_pdf_create(kid, date, kids_dict[kid]['book'], i)
 
         elems.append(NextPageTemplate('landscape'))
         elems.append(PageBreak())
