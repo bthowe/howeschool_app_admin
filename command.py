@@ -159,10 +159,7 @@ def weekly_forms_create():
             kids_dict
         )
 
-        data_scriptures = helpers_functions.scripture_list_json(form)
-        ret_scriptures = db_forms.db['Scriptures'].insert_one(data_scriptures)
-        print('Scriptures data inserted: {}'.format(ret_scriptures))
-        return redirect(url_for('weekly_forms_create'))
+        return redirect(url_for('download_forms'))
     return render_template('weekly_forms_create.html', form=form, date=date, form_data=output, page_name='Weekly Forms')
 
 
@@ -230,4 +227,3 @@ if __name__ == '__main__':
 
 # todo: make an interface that is like the time sheet and that can be manipulated
 # todo: dockerize everything.
-# todo: just download upon submit. I don't need to have to navigate to the download page.
