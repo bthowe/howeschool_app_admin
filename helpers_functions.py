@@ -64,16 +64,24 @@ def weekly_data_json(form):
         "thu_job_seth": form.thu_job_seth.data,
         "fri_job_seth": form.fri_job_seth.data,
         "sat_job_seth": form.sat_job_seth.data,
+        "mon_job_mags": form.mon_job_mags.data,
+        "tue_job_mags": form.tue_job_mags.data,
+        "wed_job_mags": form.wed_job_mags.data,
+        "thu_job_mags": form.thu_job_mags.data,
+        "fri_job_mags": form.fri_job_mags.data,
+        "sat_job_mags": form.sat_job_mags.data,
 
         "calvin_goal1": form.cal_goal.data,
         "samuel_goal1": form.sam_goal.data,
         "kay_goal1": form.kay_goal.data,
         "seth_goal1": form.seth_goal.data,
+        "mags_goal1": form.mags_goal.data,
 
         "calvin_book": form.cal_book.data,
         "samuel_book": form.sam_book.data,
         "kay_book": form.kay_book.data,
-        "seth_book": form.seth_book.data
+        "seth_book": form.seth_book.data,
+        "mags_book": form.mags_book.data
     }
     return data
 
@@ -170,14 +178,14 @@ def _table_body(name, dates, kid_dict):
             ['Job: Pickup \n (5 min.)', 'X', '', '', '', '', '', ''],
             ['Job:\n ', 'X'] + kid_dict['jobs'],
         ]
-    elif name == 'Seth':
+    elif name in ['Seth', 'Maggie']:
         return [
             [f'{days[0]}\n{days[1]}' for days in zip(days_of_week, [''] + dates)],
             [f'Math ({kid_dict["book"]}) \n (1.5-2 hrs.)', 'X', '', '', '', '', '', ''],
             ['Reading: Scriptures \n (10 min.)', '', '', '', '', '', '', ''],
             ['Reading: Other \n (110 min.)', 'X', '', '', '', '', '', ''],
             ['Letters: Writing \n (15 min.)', 'X', '', '', '', '', '', ''],
-            ['Music \n (15-30 min.)', '', '', '', '', '', '', ''],
+            ['Music \n (15-60 min.)', '', '', '', '', '', '', ''],
             ['Job: Pickup \n (5 min.)', 'X', '', '', '', '', '', ''],
             ['Job:\n ', 'X'] + kid_dict['jobs'],
         ]
