@@ -130,12 +130,12 @@ def weekly_forms_create():
             'Calvin': {
                 'book': form.cal_book.data,
                 'goal': form.cal_goal.data,
-                'jobs': ['vacuum stairs #1', 'vacuum stairs #2', "vacuum parent's\nroom, closet, and\nhallway", 'vacuum stairs #1', 'vacuum stairs #2', "vacuum parent's\nroom, closet, and\nhallway"]
+                'jobs': ['toilet', 'garbage, mirror,\npaper towels,\nlight switches\ndoor knobs', 'sink, handsoap\nhand towel', 'vacuum room', 'fold laundry', 'other bathrooms']
             },
             'Samuel': {
                 'book': form.sam_book.data,
                 'goal': form.sam_goal.data,
-                'jobs': ['toilet', 'garbage, mirror,\npaper towels,\nlight switches\ndoor knobs', 'sink, handsoap\nhand towel', 'vacuum room', 'fold laundry', 'other bathrooms']
+                'jobs': ['vacuum stairs #1', 'vacuum stairs #2', "vacuum parent's\nroom, closet, and\nhallway", 'vacuum stairs #1', 'vacuum stairs #2', "vacuum parent's\nroom, closet, and\nhallway"]
             },
             'Kay': {
                 'book': form.kay_book.data,
