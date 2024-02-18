@@ -70,18 +70,26 @@ def weekly_data_json(form):
         "thu_job_mags": form.thu_job_mags.data,
         "fri_job_mags": form.fri_job_mags.data,
         "sat_job_mags": form.sat_job_mags.data,
+        "mon_job_mar": form.mon_job_mar.data,
+        "tue_job_mar": form.tue_job_mar.data,
+        "wed_job_mar": form.wed_job_mar.data,
+        "thu_job_mar": form.thu_job_mar.data,
+        "fri_job_mar": form.fri_job_mar.data,
+        "sat_job_mar": form.sat_job_mar.data,
 
         "calvin_goal1": form.cal_goal.data,
         "samuel_goal1": form.sam_goal.data,
         "kay_goal1": form.kay_goal.data,
         "seth_goal1": form.seth_goal.data,
         "mags_goal1": form.mags_goal.data,
+        "martin_goal1": form.mar_goal.data,
 
         "calvin_book": form.cal_book.data,
         "samuel_book": form.sam_book.data,
         "kay_book": form.kay_book.data,
         "seth_book": form.seth_book.data,
-        "mags_book": form.mags_book.data
+        "mags_book": form.mags_book.data,
+        "mar_book": form.mar_book.data
     }
     return data
 
@@ -152,7 +160,7 @@ def _header_create(name, scripture_dict, kid_dict):
 
 def _table_body(name, dates, kid_dict):
     days_of_week = ['', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    if name == 'Calvin':
+    if name == ['Calvin', 'Samuel']:
         return [
             [f'{days[0]}\n{days[1]}' for days in zip(days_of_week, [''] + dates)],
             [f'Math ({kid_dict["book"]}) \n (1.5-2 hrs.)', 'X', '', '', '', '', '', ''],
@@ -166,7 +174,7 @@ def _table_body(name, dates, kid_dict):
             ['Job: Pickup \n (5 min.)', 'X', '', '', '', '', '', ''],
             ['Job:\n ', 'X'] + kid_dict['jobs'],
         ]
-    elif name in ['Samuel', 'Kay']:
+    elif name in ['Kay', 'Seth']:
         return [
             [f'{days[0]}\n{days[1]}' for days in zip(days_of_week, [''] + dates)],
             [f'Math ({kid_dict["book"]}) \n (1.5-2 hrs.)', 'X', '', '', '', '', '', ''],
@@ -178,7 +186,7 @@ def _table_body(name, dates, kid_dict):
             ['Job: Pickup \n (5 min.)', 'X', '', '', '', '', '', ''],
             ['Job:\n ', 'X'] + kid_dict['jobs'],
         ]
-    elif name in ['Seth', 'Maggie']:
+    elif name in ['Maggie', 'Martin']:
         return [
             [f'{days[0]}\n{days[1]}' for days in zip(days_of_week, [''] + dates)],
             [f'Math ({kid_dict["book"]}) \n (1.5-2 hrs.)', 'X', '', '', '', '', '', ''],

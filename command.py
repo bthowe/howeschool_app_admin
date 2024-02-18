@@ -151,6 +151,11 @@ def weekly_forms_create():
                 'book': form.mags_book.data,
                 'goal': form.mags_goal.data,
                 'jobs': ['toilet', 'garbage, mirror,\npaper towels,\nlight switches\ndoor knobs', 'sink, handsoap\nhand towel', 'vacuum room', 'fold laundry', 'other bathrooms']
+            },
+            'Martin': {
+                'book': form.mar_book.data,
+                'goal': form.mar_goal.data,
+                'jobs': ['toilet', 'garbage, mirror,\npaper towels,\nlight switches\ndoor knobs', 'sink, handsoap\nhand towel', 'vacuum room', 'fold laundry', 'other bathrooms']
             }
         }
 

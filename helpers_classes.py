@@ -57,22 +57,30 @@ class WeeklyForm(FlaskForm):
     thu_job_mags = StringField('Thursday', validators=[InputRequired()], id='thu_job_mags')
     fri_job_mags = StringField('Friday', validators=[InputRequired()], id='fri_job_mags')
     sat_job_mags = StringField('Saturday', validators=[InputRequired()], id='sat_job_mags')
+    mon_job_mar = StringField('Monday', validators=[InputRequired()], id='mon_job_mar')
+    tue_job_mar = StringField('Tuesday', validators=[InputRequired()], id='tue_job_mar')
+    wed_job_mar = StringField('Wednesday', validators=[InputRequired()], id='wed_job_mar')
+    thu_job_mar = StringField('Thursday', validators=[InputRequired()], id='thu_job_mar')
+    fri_job_mar = StringField('Friday', validators=[InputRequired()], id='fri_job_mar')
+    sat_job_mar = StringField('Saturday', validators=[InputRequired()], id='sat_job_mar')
 
     cal_goal = StringField('Calvin', validators=[InputRequired()], id='calvin_goal1')
     sam_goal = StringField('Samuel', validators=[InputRequired()], id='samuel_goal1')
     kay_goal = StringField('Kay', validators=[InputRequired()], id='kay_goal1')
     seth_goal = StringField('Seth', validators=[InputRequired()], id='seth_goal1')
     mags_goal = StringField('Maggie', validators=[InputRequired()], id='mags_goal1')
+    mar_goal = StringField('Martin', validators=[InputRequired()], id='martin_goal1')
 
     cal_book = StringField('Calvin', validators=[InputRequired()], id='calvin_book')
     sam_book = StringField('Samuel', validators=[InputRequired()], id='samuel_book')
     kay_book = StringField('Kay', validators=[InputRequired()], id='kay_book')
     seth_book = StringField('Seth', validators=[InputRequired()], id='seth_book')
     mags_book = StringField('Maggie', validators=[InputRequired()], id='mags_book')
+    mar_book = StringField('Martin', validators=[InputRequired()], id='mar_book')
 
 
 class ScriptureDailyForm(FlaskForm):
-    choose_kid = SelectField('Name', choices=[('choose', 'Choose...'), ('Calvin', 'Calvin'), ('Samuel', 'Samuel'), ('Kay', 'Kay'), ('Seth', 'Seth'), ('Maggie', 'Maggie')], validators=[InputRequired()], id='choose_kid', render_kw={'onchange': 'focus_to_date()'})
+    choose_kid = SelectField('Name', choices=[('choose', 'Choose...'), ('Calvin', 'Calvin'), ('Samuel', 'Samuel'), ('Kay', 'Kay'), ('Seth', 'Seth'), ('Maggie', 'Maggie'), ('Martin', 'Martin')], validators=[InputRequired()], id='choose_kid', render_kw={'onchange': 'focus_to_date()'})
     date = DateField('Date', validators=[InputRequired()], id='date')
     start_book = StringField('Start Book', validators=[InputRequired()], id='start_book', render_kw={'onchange': 'update_end_book()'})
     start_chapter = IntegerField('Start Chapter', validators=[InputRequired()], id='start_chapter', render_kw={'onchange': 'update_end_chapter()'})
@@ -84,7 +92,7 @@ class ScriptureDailyForm(FlaskForm):
 
 
 class CreditDebit(FlaskForm):
-    choose_kid = SelectField('Name', choices=[('choose', 'Choose...'), ('Calvin', 'Calvin'), ('Samuel', 'Samuel'), ('Kay', 'Kay'), ('Seth', 'Seth'), ('Maggie', 'Maggie')], validators=[InputRequired()], id='choose_kid')
+    choose_kid = SelectField('Name', choices=[('choose', 'Choose...'), ('Calvin', 'Calvin'), ('Samuel', 'Samuel'), ('Kay', 'Kay'), ('Seth', 'Seth'), ('Maggie', 'Maggie'), ('Martin', 'Martin')], validators=[InputRequired()], id='choose_kid')
     credit_debit = SelectField('Transaction Type', choices=[('choose', 'Choose...'), ('deposit', 'Deposit'), ('withdrawal', 'Withdrawal')], validators=[InputRequired()], id='credit_debit')
     amount = FloatField('Amount', validators=[InputRequired()], id='amount')
     description = StringField('Description', validators=[InputRequired()], widget=TextArea(), id='description')
