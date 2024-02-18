@@ -88,6 +88,10 @@
                             <th class="col-2">{{ form.mags_goal.label }}</th>
                             <td class="col-8">{{ form.mags_goal(class_="col-12") }} </td>
                         </tr>
+                        <tr class="d-flex">
+                            <th class="col-2">{{ form.martin_goal.label }}</th>
+                            <td class="col-8">{{ form.martin_goal(class_="col-12") }} </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -121,6 +125,10 @@
                             <th class="col-2">{{ form.mags_book.label }}</th>
                             <td class="col-5">{{ form.mags_book(class_="col-12") }} </td>
                         </tr>
+                        <tr class="d-flex">
+                            <th class="col-2">{{ form.mar_book.label }}</th>
+                            <td class="col-5">{{ form.mar_book(class_="col-12") }} </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -142,7 +150,7 @@
             formData = {{ form_data | tojson }}
 
             day_lst = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-            kid_lst = ['calvin', 'samuel', 'kay', 'seth', 'mags'];
+            kid_lst = ['calvin', 'samuel', 'kay', 'seth', 'mags', 'martin'];
 
             document.getElementById('date').value = date;
 
