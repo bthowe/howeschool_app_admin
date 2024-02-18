@@ -159,9 +159,8 @@ def _header_create(name, scripture_dict, kid_dict):
     return paragraph
 
 def _table_body(name, dates, kid_dict):
-    print(name, dates, kid_dict)
     days_of_week = ['', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    if name == ['Calvin', 'Samuel']:
+    if name in ['Calvin', 'Samuel']:
         return [
             [f'{days[0]}\n{days[1]}' for days in zip(days_of_week, [''] + dates)],
             [f'Math ({kid_dict["book"]}) \n (1.5-2 hrs.)', 'X', '', '', '', '', '', ''],
@@ -200,7 +199,6 @@ def _table_body(name, dates, kid_dict):
         ]
 
 def _table_create(name, dates, kid_dict):
-    print(_table_body(name, dates, kid_dict))
     table = Table(
         _table_body(name, dates, kid_dict),
     )
