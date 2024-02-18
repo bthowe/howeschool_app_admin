@@ -89,7 +89,7 @@ def weekly_data_json(form):
         "kay_book": form.kay_book.data,
         "seth_book": form.seth_book.data,
         "mags_book": form.mags_book.data,
-        "mar_book": form.mar_book.data
+        "mar_book": form.mar_book.data,
     }
     return data
 

@@ -80,7 +80,7 @@ class WeeklyForm(FlaskForm):
 
 
 class ScriptureDailyForm(FlaskForm):
-    choose_kid = SelectField('Name', choices=[('choose', 'Choose...'), ('Calvin', 'Calvin'), ('Samuel', 'Samuel'), ('Kay', 'Kay'), ('Seth', 'Seth'), ('Maggie', 'Maggie'), ('Martin', 'Martin')], validators=[InputRequired()], id='choose_kid', render_kw={'onchange': 'focus_to_date()'})
+    choose_kid = SelectField('Name', choices=[('choose', 'Choose...'), ('Calvin', 'Calvin'), ('Samuel', 'Samuel'), ('Kay', 'Kay'), ('Seth', 'Seth'), ('Maggie', 'Maggie'), ('Martin', 'Martin'),], validators=[InputRequired()], id='choose_kid', render_kw={'onchange': 'focus_to_date()'})
     date = DateField('Date', validators=[InputRequired()], id='date')
     start_book = StringField('Start Book', validators=[InputRequired()], id='start_book', render_kw={'onchange': 'update_end_book()'})
     start_chapter = IntegerField('Start Chapter', validators=[InputRequired()], id='start_chapter', render_kw={'onchange': 'update_end_chapter()'})
@@ -92,7 +92,7 @@ class ScriptureDailyForm(FlaskForm):
 
 
 class CreditDebit(FlaskForm):
-    choose_kid = SelectField('Name', choices=[('choose', 'Choose...'), ('Calvin', 'Calvin'), ('Samuel', 'Samuel'), ('Kay', 'Kay'), ('Seth', 'Seth'), ('Maggie', 'Maggie'), ('Martin', 'Martin')], validators=[InputRequired()], id='choose_kid')
+    choose_kid = SelectField('Name', choices=[('choose', 'Choose...'), ('Calvin', 'Calvin'), ('Samuel', 'Samuel'), ('Kay', 'Kay'), ('Seth', 'Seth'), ('Maggie', 'Maggie'), ('Martin', 'Martin'),], validators=[InputRequired()], id='choose_kid')
     credit_debit = SelectField('Transaction Type', choices=[('choose', 'Choose...'), ('deposit', 'Deposit'), ('withdrawal', 'Withdrawal')], validators=[InputRequired()], id='credit_debit')
     amount = FloatField('Amount', validators=[InputRequired()], id='amount')
     description = StringField('Description', validators=[InputRequired()], widget=TextArea(), id='description')
